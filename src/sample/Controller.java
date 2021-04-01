@@ -149,7 +149,7 @@ public class Controller {
     @FXML
     public void startButton(ActionEvent actionEvent) {
 
-        new Dij().run();
+        new Gridder().sp();
 //        mazeSolver.solve(mazeSolver.maze, new MazeSolver.Point(0, 0), mainCanvas.getGraphicsContext2D());
 //        mazeSolver.printAns();
 
