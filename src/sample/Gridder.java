@@ -3,7 +3,7 @@ package sample;
 import java.util.*;
 public class Gridder {
 
-    private final int SIZE = 20;
+    private final int SIZE = 50;
     Vertex[][] grid;
 
     Gridder() {
@@ -22,27 +22,21 @@ public class Gridder {
 
     List<Vertex> sp(int startX, int startY, int endX, int endY) {
 
-        List<Vertex> q = new ArrayList<>();
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
-                if (grid[i][j].type == 'p') {
-                    q.add(grid[i][j]);
-                }
-            }
-        }
 
+        Queue<Vertex> q = new ArrayDeque<>();
         Map<Vertex, Vertex> prev = new HashMap<>();
 
         grid[startX][startY].dist = 0;
+        q.add(grid[startX][startY]);
 
         while (!q.isEmpty()) {
 
-            Vertex u = Collections.min(q);
-            q.remove(u);
+            Vertex u = q.remove();
 
             List<Vertex> neighbors = getNeighbors(u);
 
             for (Vertex v : neighbors) {
+                q.add(v);
                 v.visited = true;
                 int altDist = u.dist + 1;
                 if (altDist < v.dist) {

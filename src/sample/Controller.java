@@ -1,7 +1,7 @@
 package sample;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.Glow;
@@ -14,7 +14,7 @@ import java.util.List;
 
 public class Controller {
 
-    private final int LEN = 25;
+    private final int LEN = 10;
 
     private String keyPress = "";
 
@@ -31,11 +31,8 @@ public class Controller {
 
     @FXML
     public void initialize() {
-
         mainCanvas.addEventFilter(MouseEvent.ANY, (e) -> mainCanvas.requestFocus());
-
         resetCanvas();
-
     }
 
     private void resetCanvas() {
@@ -137,7 +134,6 @@ public class Controller {
         keyPress = "";
 
         g.fillRect(x, y, LEN, LEN);
-
         g.setFill(Color.rgb(3, 7, 30));
 
 
@@ -150,7 +146,9 @@ public class Controller {
 
     @FXML
     public void startButton(ActionEvent actionEvent) {
-        
+
+        System.out.println(Arrays.toString(startCord));
+
         List<Gridder.Vertex> path = gridder.sp((int) startCord[0] / LEN, (int) startCord[1] / LEN, (int) endCord[0] / LEN, (int) endCord[1] / LEN);
 
         GraphicsContext g = mainCanvas.getGraphicsContext2D();
