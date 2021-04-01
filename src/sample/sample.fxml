@@ -1,0 +1,39 @@
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.canvas.Canvas?>
+
+<?import javafx.scene.control.Label?>
+<HBox fx:controller="sample.Controller" xmlns:fx="http://javafx.com/fxml" alignment="center">
+
+    <VBox prefWidth="130" alignment="CENTER" spacing="10">
+        <Button text="Start" prefWidth="80" onAction="#startButton"
+                style="-fx-background-color: #44d0cd; -fx-text-fill: #ffffff"/>
+        <Button text="Clear" prefWidth="80" onAction="#clearButton"
+                style="-fx-background-color: #44d0cd; -fx-text-fill: #ffffff"/>
+        <Button text="Quit" prefWidth="80" onAction="#quitButton"
+                style="-fx-background-color: #44d0cd; -fx-text-fill: #ffffff"/>
+
+        <Label text="Start" textFill="60A561FF"
+               style="-fx-font-weight: bold; -fx-background-radius: 2;-fx-label-padding: 2; -fx-max-width: 60; -fx-alignment: center;"/>
+
+        <Label text="Finish" textFill="E34A6FFF"
+               style="-fx-font-weight: bold; -fx-background-radius: 2; -fx-label-padding: 2; -fx-max-width: 60; -fx-alignment: center"/>
+
+        <Label text="Wall" textFill="#000000"
+               style="-fx-font-weight: bold; -fx-background-radius: 2;  -fx-label-padding: 2; -fx-max-width: 60; -fx-alignment: center"/>
+
+        <Label text="Path" textFill="4EA5D2FF"
+               style="-fx-font-weight: bold; -fx-background-radius: 2;  -fx-label-padding: 2; -fx-max-width: 60; -fx-alignment: center"/>
+
+        <Label text="Backtrack" textFill="595386FF"
+               style="-fx-font-weight: bold; -fx-background-radius: 2;  -fx-label-padding: 2; -fx-max-width: 60; -fx-alignment: center"/>
+
+    </VBox>
+
+    <Canvas fx:id="mainCanvas" height="500.0" width="500.0" onMouseDragged="#addWall" onMouseClicked="#addStartFinish"
+            onKeyPressed="#option">
+
+    </Canvas>
+
+</HBox>
