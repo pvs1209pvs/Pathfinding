@@ -149,8 +149,9 @@ public class Controller {
     @FXML
     public void startButton(ActionEvent actionEvent) {
 
-        mazeSolver.solve(mazeSolver.maze, new MazeSolver.Point(0, 0), mainCanvas.getGraphicsContext2D());
-        mazeSolver.printAns();
+        new Dij().run();
+//        mazeSolver.solve(mazeSolver.maze, new MazeSolver.Point(0, 0), mainCanvas.getGraphicsContext2D());
+//        mazeSolver.printAns();
 
         if (!startSet) {
             System.out.println("start not set");
