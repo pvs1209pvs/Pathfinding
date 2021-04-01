@@ -5,27 +5,42 @@ import java.util.stream.IntStream;
 
 public class Gridder {
 
-    private final int SIZE = 3;
+    private final int SIZE = 10;
     private Vertex[][] grid;
+    private char[][] map;
 
     Gridder() {
         grid = new Vertex[SIZE][SIZE];
+        map = new char[SIZE][SIZE];
 
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
+
                 Vertex v = new Vertex(i, j);
                 v.dist = Integer.MAX_VALUE;
+
+                if(Math.random()<0.3){
+                    v.type='w';
+                }
+
                 grid[i][j] = v;
+
             }
         }
 
-        grid[1][1].type='w';
-        grid[0][1].type='w';
-        grid[1][2].type='w';
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                if (grid[i][j].type == 'w') {
+                    map[i][j] = '#';
+                } else {
+                    map[i][j] = '.';
+                }
+            }
+        }
 
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
-                System.out.print(grid[i][j] +" ");
+                System.out.print(map[i][j]);
             }
             System.out.println();
         }
@@ -38,15 +53,13 @@ public class Gridder {
         List<Vertex> q = new ArrayList<>();
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
-                if(grid[i][j].type=='p'){
+                if (grid[i][j].type == 'p') {
                     q.add(grid[i][j]);
                 }
             }
         }
 
-        System.out.println(q+"\n");
-
-        Map<Vertex,Vertex> prev = new HashMap<>();
+        Map<Vertex, Vertex> prev = new HashMap<>();
 
         grid[0][0].dist = 0;
 
@@ -55,42 +68,40 @@ public class Gridder {
             Vertex u = Collections.min(q);
             q.remove(u);
 
-            System.out.println("u " + u);
             List<Vertex> neighbors = getNeighbors(u);
-
-            //System.out.println(neighbors);
-
+            
             for (Vertex v : neighbors) {
-                v.visited= true;
+                v.visited = true;
                 int altDist = u.dist + 1;
                 if (altDist < v.dist) {
                     v.dist = altDist;
-                    prev.put(v,u);
+                    prev.put(v, u);
                 }
             }
 
-            System.out.println(q+"\n");
-            //System.out.println(neighbors);
-            //System.out.println();
         }
 
-//        System.out.println(getShortestPath(prev, grid[2][2]));
-//        System.out.println();
+        List<Vertex> s = getShortestPath(prev, grid[SIZE-1][SIZE-1]);
 
-         for (int i = 0; i < SIZE; i++) {
-             for (int j = 0; j < SIZE; j++) {
-                 System.out.print(grid[i][j] +" ");
-             }
-             System.out.println();
-         }
+        for(Vertex x : s){
+            map[x.c][x.r] = '*';
+        }
+
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                System.out.print(map[i][j]);
+            }
+            System.out.println();
+        }
+        System.out.println();
 
     }
 
-    private List<Vertex> getShortestPath(Map<Vertex,Vertex> prev, Vertex end){
+    private List<Vertex> getShortestPath(Map<Vertex, Vertex> prev, Vertex end) {
 
         List<Vertex> shortestPath = new ArrayList<>();
 
-        while(end!=null){
+        while (end != null) {
             shortestPath.add(end);
             end = prev.get(end);
         }
@@ -110,7 +121,7 @@ public class Gridder {
             int newC = u.c + vectorC[i];
             int newR = u.r + vectorR[i];
 
-            if (newC >= 0 && newC < SIZE && newR >= 0 && newR < SIZE && grid[newC][newR].type=='p' && !grid[newC][newR].visited){
+            if (newC >= 0 && newC < SIZE && newR >= 0 && newR < SIZE && grid[newC][newR].type == 'p' && !grid[newC][newR].visited) {
                 neighbors.add(grid[newC][newR]);
             }
         }

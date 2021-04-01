@@ -4,6 +4,7 @@
 <?import javafx.scene.canvas.Canvas?>
 
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
 <HBox fx:controller="sample.Controller" xmlns:fx="http://javafx.com/fxml" alignment="center">
 
     <VBox prefWidth="130" alignment="CENTER" spacing="10">
@@ -13,6 +14,11 @@
                 style="-fx-background-color: #44d0cd; -fx-text-fill: #ffffff"/>
         <Button text="Quit" prefWidth="80" onAction="#quitButton"
                 style="-fx-background-color: #44d0cd; -fx-text-fill: #ffffff"/>
+
+        <Label text="Instructions"/>
+        <TextArea text="Drag the mouse to add walls. Hold S + Left Mouse to add starting point. Hold E + Left Mouse to add end finishing point." wrapText="true" editable="false"/>
+
+        <Label text="Legends"/>
 
         <Label text="Start" textFill="60A561FF"
                style="-fx-font-weight: bold; -fx-background-radius: 2;-fx-label-padding: 2; -fx-max-width: 60; -fx-alignment: center;"/>
