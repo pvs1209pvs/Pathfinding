@@ -9,6 +9,9 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class Controller {
 
     private final int LEN = 25;
@@ -21,7 +24,7 @@ public class Controller {
     private double[] startCord = new double[]{-1, -1};
     private double[] endCord = new double[]{-1, -1};
 
-    MazeSolver mazeSolver = new MazeSolver();
+    private Gridder gridder = new Gridder();
 
     @FXML
     private Canvas mainCanvas;
@@ -41,7 +44,7 @@ public class Controller {
         keyPress = "";
         startSet = false;
         endSet = false;
-        mazeSolver = new MazeSolver();
+        gridder = new Gridder();
     }
 
     private void drawEmptySpots() {
@@ -90,7 +93,7 @@ public class Controller {
         g.setFill(Color.BLACK);
         g.fillRect(x, y, LEN, LEN);
 
-        mazeSolver.maze[(int) (y / LEN)][(int) (x / LEN)] = '#';
+        gridder.grid[(int) (x / LEN)][(int) (y / LEN)].type = 'w';
 
         if (startCord[0] == x && startCord[1] == y) {
             startCord = new double[]{-1, -1};
@@ -120,23 +123,22 @@ public class Controller {
         g.setEffect(glow);
 
         if (!startSet && keyPress.equals("s")) {
-            g.setFill(Color.rgb(96,165,97));
+            g.setFill(Color.rgb(96, 165, 97));
             startSet = true;
             startCord = new double[]{x, y};
         }
 
         if (!endSet && keyPress.equals("e")) {
-            g.setFill(Color.rgb(227,74,111));
+            g.setFill(Color.rgb(227, 74, 111));
             endSet = true;
             endCord = new double[]{x, y};
-            mazeSolver.maze[(int) (y / LEN)][(int) (x / LEN)] = 'e';
         }
 
         keyPress = "";
 
         g.fillRect(x, y, LEN, LEN);
 
-        g.setFill(Color.rgb(3,7,30));
+        g.setFill(Color.rgb(3, 7, 30));
 
 
     }
@@ -148,10 +150,21 @@ public class Controller {
 
     @FXML
     public void startButton(ActionEvent actionEvent) {
+        
+        List<Gridder.Vertex> path = gridder.sp((int) startCord[0] / LEN, (int) startCord[1] / LEN, (int) endCord[0] / LEN, (int) endCord[1] / LEN);
 
-        new Gridder().sp();
-//        mazeSolver.solve(mazeSolver.maze, new MazeSolver.Point(0, 0), mainCanvas.getGraphicsContext2D());
-//        mazeSolver.printAns();
+        GraphicsContext g = mainCanvas.getGraphicsContext2D();
+
+        path.remove(0);
+        path.remove(path.size()-1);
+
+        for (Gridder.Vertex v : path) {
+            g.setFill(Color.rgb(78, 165, 210));
+            g.setStroke(Color.GRAY);
+            g.setLineWidth(0.1);
+            g.strokeRect(v.c * LEN, v.r * LEN, LEN, LEN);
+            g.fillRect(v.c * LEN, v.r * LEN, LEN, LEN);
+        }
 
         if (!startSet) {
             System.out.println("start not set");

@@ -1,54 +1,26 @@
 package sample;
 
 import java.util.*;
-import java.util.stream.IntStream;
-
 public class Gridder {
 
-    private final int SIZE = 10;
-    private Vertex[][] grid;
-    private char[][] map;
+    private final int SIZE = 20;
+    Vertex[][] grid;
 
     Gridder() {
+
         grid = new Vertex[SIZE][SIZE];
-        map = new char[SIZE][SIZE];
 
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
-
                 Vertex v = new Vertex(i, j);
                 v.dist = Integer.MAX_VALUE;
-
-                if(Math.random()<0.3){
-                    v.type='w';
-                }
-
                 grid[i][j] = v;
-
             }
         }
-
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
-                if (grid[i][j].type == 'w') {
-                    map[i][j] = '#';
-                } else {
-                    map[i][j] = '.';
-                }
-            }
-        }
-
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
-                System.out.print(map[i][j]);
-            }
-            System.out.println();
-        }
-        System.out.println();
 
     }
 
-    void sp() {
+    List<Vertex> sp(int startX, int startY, int endX, int endY) {
 
         List<Vertex> q = new ArrayList<>();
         for (int i = 0; i < SIZE; i++) {
@@ -61,7 +33,7 @@ public class Gridder {
 
         Map<Vertex, Vertex> prev = new HashMap<>();
 
-        grid[0][0].dist = 0;
+        grid[startX][startY].dist = 0;
 
         while (!q.isEmpty()) {
 
@@ -69,7 +41,7 @@ public class Gridder {
             q.remove(u);
 
             List<Vertex> neighbors = getNeighbors(u);
-            
+
             for (Vertex v : neighbors) {
                 v.visited = true;
                 int altDist = u.dist + 1;
@@ -81,19 +53,7 @@ public class Gridder {
 
         }
 
-        List<Vertex> s = getShortestPath(prev, grid[SIZE-1][SIZE-1]);
-
-        for(Vertex x : s){
-            map[x.c][x.r] = '*';
-        }
-
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
-                System.out.print(map[i][j]);
-            }
-            System.out.println();
-        }
-        System.out.println();
+        return getShortestPath(prev, grid[endX][endY]);
 
     }
 
@@ -130,7 +90,7 @@ public class Gridder {
 
     }
 
-    private class Vertex implements Comparable<Vertex> {
+    static class Vertex implements Comparable<Vertex> {
 
         int c;
         int r;
