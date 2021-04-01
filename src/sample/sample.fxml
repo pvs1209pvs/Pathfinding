@@ -6,9 +6,12 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.text.TextFlow?>
+<?import javafx.geometry.Insets?>
 <HBox fx:controller="sample.Controller" xmlns:fx="http://javafx.com/fxml" alignment="center">
 
     <VBox prefWidth="130" alignment="CENTER" spacing="10">
+
         <Button text="Start" prefWidth="80" onAction="#startButton"
                 style="-fx-background-color: #44d0cd; -fx-text-fill: #ffffff"/>
         <Button text="Clear" prefWidth="80" onAction="#clearButton"
@@ -18,30 +21,30 @@
 
         <Label text="Legends"
                style="-fx-font-weight: bold; -fx-background-radius: 2;-fx-label-padding: 2; -fx-max-width: 60; -fx-alignment: center"/>
-
         <Label text="Start" textFill="60A561FF"
                style="-fx-background-radius: 2;-fx-label-padding: 2; -fx-max-width: 60; -fx-alignment: center;"/>
-
         <Label text="Finish" textFill="E34A6FFF"
                style="-fx-background-radius: 2; -fx-label-padding: 2; -fx-max-width: 60; -fx-alignment: center"/>
-
         <Label text="Wall" textFill="#000000"
                style="-fx-background-radius: 2;  -fx-label-padding: 2; -fx-max-width: 60; -fx-alignment: center"/>
-
         <Label text="Path" textFill="4EA5D2FF"
                style="-fx-background-radius: 2;  -fx-label-padding: 2; -fx-max-width: 60; -fx-alignment: center"/>
-
         <Label text="Tutorial"
                style="-fx-font-weight: bold; -fx-background-radius: 2;-fx-label-padding: 2; -fx-max-width: 60; -fx-alignment: center"/>
-        <Text text="Drag the mouse to add walls. Hold S + Left Mouse to add starting point. Hold E + Left Mouse to add end finishing point."
-        wrappingWidth="80"/>
 
+        <TextFlow style="-fx-alignment: center">
+            <Text text="Drag mouse to add "/>
+            <Text text="Walls " style="-fx-stroke: #564e4e"/>
+            <Text text="Hold S + Left Mouse to add "/>
+            <Text text="Starting Point " style="-fx-stroke: #60a561"/>
+            <Text text="Hold  E+ Left Mouse to add "/>
+            <Text text="Finishing Point " style="-fx-stroke: #e34a70"/>
+        </TextFlow>
 
     </VBox>
 
     <Canvas fx:id="mainCanvas" height="500.0" width="500.0" onMouseDragged="#addWall" onMouseClicked="#addStartFinish"
             onKeyPressed="#option">
-
     </Canvas>
 
 </HBox>
