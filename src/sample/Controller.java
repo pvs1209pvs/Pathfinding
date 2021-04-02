@@ -24,7 +24,7 @@ public class Controller {
     private Point start = new Point(-1,-1);
     private Point end = new Point(-1,-1);
 
-    private Gridder gridder = new Gridder();
+    private DijkstraPathfinder dijkstraPathfinder = new DijkstraPathfinder();
 
     @FXML
     private Canvas mainCanvas;
@@ -41,7 +41,7 @@ public class Controller {
         keyPress = "";
         startSet = false;
         endSet = false;
-        gridder = new Gridder();
+        dijkstraPathfinder = new DijkstraPathfinder();
     }
 
     private void drawEmptySpots() {
@@ -80,24 +80,27 @@ public class Controller {
     @FXML
     public void addWall(MouseEvent mouseEvent) {
 
-        double x = mouseEvent.getSceneX() - 100;
-        double y = mouseEvent.getSceneY() - 0;
+        Point mousePos = new Point((int)(mouseEvent.getSceneX() - 100), (int)(mouseEvent.getSceneY() - 0));
 
-        x = (x + (LEN - (x % LEN))) - LEN;
-        y = (y + (LEN - (y % LEN))) - LEN;
+        mousePos.x = (mousePos.x + (LEN - (mousePos.x % LEN))) - LEN;
+        mousePos.y = (mousePos.y + (LEN - (mousePos.y % LEN))) - LEN;
 
         GraphicsContext g = mainCanvas.getGraphicsContext2D();
         g.setFill(Color.BLACK);
-        g.fillRect(x, y, LEN, LEN);
+        g.fillRect(mousePos.x, mousePos.y, LEN, LEN);
 
-        gridder.grid[(int) (x / LEN)][(int) (y / LEN)].type = 'w';
+        DijkstraPathfinder.Vertex updatedVertex = dijkstraPathfinder.getVertex(mousePos.x/LEN, mousePos.y/LEN);
+        updatedVertex.setType(DijkstraPathfinder.VERTEX_TYPE.WALL);
+        dijkstraPathfinder.setVertex(mousePos.x/LEN, mousePos.y/LEN, updatedVertex);
 
-        if (start.x == x && start.y == y) {
+        //dijkstraPathfinder.grid[mousePos.x / LEN][mousePos.y / LEN].setType(DijkstraPathfinder.VERTEX_TYPE.WALL);
+
+        if (start.x == mousePos.x && start.y == mousePos.y) {
             start = new Point(-1,-1);
             startSet = false;
         }
 
-        if (end.x == x && end.y == y) {
+        if (end.x == mousePos.x && end.y == mousePos.y) {
             end = new Point(-1, -1);
             endSet = false;
         }
@@ -107,11 +110,10 @@ public class Controller {
     @FXML
     public void addStartFinish(MouseEvent mouseEvent) {
 
-        double x = mouseEvent.getSceneX() - 100;
-        double y = mouseEvent.getSceneY() - 0;
+        Point mousePos = new Point((int)(mouseEvent.getSceneX() - 100), (int)(mouseEvent.getSceneY() - 0));
 
-        x = (x + (LEN - (x % LEN))) - LEN;
-        y = (y + (LEN - (y % LEN))) - LEN;
+        mousePos.x = (mousePos.x + (LEN - (mousePos.x % LEN))) - LEN;
+        mousePos.y = (mousePos.y + (LEN - (mousePos.y % LEN))) - LEN;
 
         GraphicsContext g = mainCanvas.getGraphicsContext2D();
 
@@ -122,25 +124,25 @@ public class Controller {
         if (!startSet && keyPress.equals("s")) {
             g.setFill(Color.rgb(96, 165, 97));
             startSet = true;
-            start = new Point((int)x, (int)y);
+            start = new Point(mousePos.x, mousePos.y);
         }
 
         if (!endSet && keyPress.equals("e")) {
             g.setFill(Color.rgb(227, 74, 111));
             endSet = true;
-            end = new Point((int)x, (int)y);
+            end = new Point(mousePos.x, mousePos.y);
         }
 
         keyPress = "";
 
-        g.fillRect(x, y, LEN, LEN);
+        g.fillRect(mousePos.x, mousePos.y, LEN, LEN);
         g.setFill(Color.rgb(3, 7, 30));
 
     }
 
     @FXML
     public void option(KeyEvent keyEvent) {
-        keyPress = keyEvent.getText();
+        keyPress = keyEvent.getText().toLowerCase();
     }
 
     @FXML
@@ -159,19 +161,19 @@ public class Controller {
         start.y /= LEN;
         end.x /= LEN;
         end.y /= LEN;
-        List<Gridder.Vertex> path = gridder.sp(start, end);
+        List<DijkstraPathfinder.Vertex> path = dijkstraPathfinder.shortestPath(start, end);
 
         GraphicsContext g = mainCanvas.getGraphicsContext2D();
 
         path.remove(0);
         path.remove(path.size()-1);
 
-        for (Gridder.Vertex v : path) {
+        for (DijkstraPathfinder.Vertex v : path) {
             g.setFill(Color.rgb(78, 165, 210));
             g.setStroke(Color.GRAY);
             g.setLineWidth(0.1);
-            g.strokeRect(v.c * LEN, v.r * LEN, LEN, LEN);
-            g.fillRect(v.c * LEN, v.r * LEN, LEN, LEN);
+            g.strokeRect(v.getC() * LEN, v.getR() * LEN, LEN, LEN);
+            g.fillRect(v.getC() * LEN, v.getR() * LEN, LEN, LEN);
         }
 
     }
