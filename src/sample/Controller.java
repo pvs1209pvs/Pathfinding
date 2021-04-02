@@ -21,8 +21,8 @@ public class Controller {
     private boolean startSet = false;
     private boolean endSet = false;
 
-    private Point start = new Point(-1,-1);
-    private Point end = new Point(-1,-1);
+    private Point start = new Point(-1, -1);
+    private Point end = new Point(-1, -1);
 
     private DijkstraPathfinder dijkstraPathfinder = new DijkstraPathfinder();
 
@@ -80,7 +80,7 @@ public class Controller {
     @FXML
     public void addWall(MouseEvent mouseEvent) {
 
-        Point mousePos = new Point((int)(mouseEvent.getSceneX() - 100), (int)(mouseEvent.getSceneY() - 0));
+        Point mousePos = new Point((int) (mouseEvent.getSceneX() - 100), (int) (mouseEvent.getSceneY() - 0));
 
         mousePos.x = (mousePos.x + (LEN - (mousePos.x % LEN))) - LEN;
         mousePos.y = (mousePos.y + (LEN - (mousePos.y % LEN))) - LEN;
@@ -89,14 +89,12 @@ public class Controller {
         g.setFill(Color.BLACK);
         g.fillRect(mousePos.x, mousePos.y, LEN, LEN);
 
-        DijkstraPathfinder.Vertex updatedVertex = dijkstraPathfinder.getVertex(mousePos.x/LEN, mousePos.y/LEN);
+        DijkstraPathfinder.Vertex updatedVertex = dijkstraPathfinder.getVertex(mousePos.x / LEN, mousePos.y / LEN);
         updatedVertex.setType(DijkstraPathfinder.VERTEX_TYPE.WALL);
-        dijkstraPathfinder.setVertex(mousePos.x/LEN, mousePos.y/LEN, updatedVertex);
-
-        //dijkstraPathfinder.grid[mousePos.x / LEN][mousePos.y / LEN].setType(DijkstraPathfinder.VERTEX_TYPE.WALL);
+        dijkstraPathfinder.setVertex(mousePos.x / LEN, mousePos.y / LEN, updatedVertex);
 
         if (start.x == mousePos.x && start.y == mousePos.y) {
-            start = new Point(-1,-1);
+            start = new Point(-1, -1);
             startSet = false;
         }
 
@@ -110,8 +108,7 @@ public class Controller {
     @FXML
     public void addStartFinish(MouseEvent mouseEvent) {
 
-        Point mousePos = new Point((int)(mouseEvent.getSceneX() - 100), (int)(mouseEvent.getSceneY() - 0));
-
+        Point mousePos = new Point((int) (mouseEvent.getSceneX() - 100), (int) (mouseEvent.getSceneY() - 0));
         mousePos.x = (mousePos.x + (LEN - (mousePos.x % LEN))) - LEN;
         mousePos.y = (mousePos.y + (LEN - (mousePos.y % LEN))) - LEN;
 
@@ -123,14 +120,14 @@ public class Controller {
 
         if (!startSet && keyPress.equals("s")) {
             g.setFill(Color.rgb(96, 165, 97));
-            startSet = true;
             start = new Point(mousePos.x, mousePos.y);
+            startSet = true;
         }
 
         if (!endSet && keyPress.equals("e")) {
             g.setFill(Color.rgb(227, 74, 111));
-            endSet = true;
             end = new Point(mousePos.x, mousePos.y);
+            endSet = true;
         }
 
         keyPress = "";
@@ -166,7 +163,7 @@ public class Controller {
         GraphicsContext g = mainCanvas.getGraphicsContext2D();
 
         path.remove(0);
-        path.remove(path.size()-1);
+        path.remove(path.size() - 1);
 
         for (DijkstraPathfinder.Vertex v : path) {
             g.setFill(Color.rgb(78, 165, 210));

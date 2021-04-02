@@ -67,10 +67,10 @@ public class DijkstraPathfinder {
 
         final List<Vertex> neighbors = new ArrayList<>();
 
-        final int[] vectorC = new int[]{-1, 1, 0, 0};
-        final int[] vectorR = new int[]{0, 0, -1, 1};
+        final int[] vectorC = new int[]{-1, 1, 0, 0, -1, -1, 1, 1};
+        final int[] vectorR = new int[]{0, 0, -1, 1, -1, 1, -1, 1};
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 8; i++) {
             int newC = u.c + vectorC[i];
             int newR = u.r + vectorR[i];
 
@@ -83,11 +83,11 @@ public class DijkstraPathfinder {
 
     }
 
-    public void setVertex(int x, int y, Vertex v){
+    public void setVertex(int x, int y, Vertex v) {
         this.grid[x][y] = v;
     }
 
-    public Vertex getVertex(int x, int y){
+    public Vertex getVertex(int x, int y) {
         return this.grid[x][y];
     }
 
