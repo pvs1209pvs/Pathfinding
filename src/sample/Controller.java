@@ -9,7 +9,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
-import java.util.Arrays;
+import java.awt.*;
 import java.util.List;
 
 public class Controller {
@@ -21,8 +21,8 @@ public class Controller {
     private boolean startSet = false;
     private boolean endSet = false;
 
-    private double[] startCord = new double[]{-1, -1};
-    private double[] endCord = new double[]{-1, -1};
+    private Point start = new Point(-1,-1);
+    private Point end = new Point(-1,-1);
 
     private Gridder gridder = new Gridder();
 
@@ -92,13 +92,13 @@ public class Controller {
 
         gridder.grid[(int) (x / LEN)][(int) (y / LEN)].type = 'w';
 
-        if (startCord[0] == x && startCord[1] == y) {
-            startCord = new double[]{-1, -1};
+        if (start.x == x && start.y == y) {
+            start = new Point(-1,-1);
             startSet = false;
         }
 
-        if (endCord[0] == x && endCord[1] == y) {
-            endCord = new double[]{-1, -1};
+        if (end.x == x && end.y == y) {
+            end = new Point(-1, -1);
             endSet = false;
         }
 
@@ -122,20 +122,19 @@ public class Controller {
         if (!startSet && keyPress.equals("s")) {
             g.setFill(Color.rgb(96, 165, 97));
             startSet = true;
-            startCord = new double[]{x, y};
+            start = new Point((int)x, (int)y);
         }
 
         if (!endSet && keyPress.equals("e")) {
             g.setFill(Color.rgb(227, 74, 111));
             endSet = true;
-            endCord = new double[]{x, y};
+            end = new Point((int)x, (int)y);
         }
 
         keyPress = "";
 
         g.fillRect(x, y, LEN, LEN);
         g.setFill(Color.rgb(3, 7, 30));
-
 
     }
 
@@ -147,9 +146,20 @@ public class Controller {
     @FXML
     public void startButton(ActionEvent actionEvent) {
 
-        System.out.println(Arrays.toString(startCord));
+        if (!startSet) {
+            System.out.println("start not set");
+            return;
+        }
+        if (!endSet) {
+            System.out.println("end not set");
+            return;
+        }
 
-        List<Gridder.Vertex> path = gridder.sp((int) startCord[0] / LEN, (int) startCord[1] / LEN, (int) endCord[0] / LEN, (int) endCord[1] / LEN);
+        start.x /= LEN;
+        start.y /= LEN;
+        end.x /= LEN;
+        end.y /= LEN;
+        List<Gridder.Vertex> path = gridder.sp(start, end);
 
         GraphicsContext g = mainCanvas.getGraphicsContext2D();
 
@@ -164,12 +174,6 @@ public class Controller {
             g.fillRect(v.c * LEN, v.r * LEN, LEN, LEN);
         }
 
-        if (!startSet) {
-            System.out.println("start not set");
-        }
-        if (!endSet) {
-            System.out.println("end not set");
-        }
     }
 
     @FXML

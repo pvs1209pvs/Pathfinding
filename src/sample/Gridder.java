@@ -1,6 +1,9 @@
 package sample;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
+
 public class Gridder {
 
     private final int SIZE = 50;
@@ -20,14 +23,14 @@ public class Gridder {
 
     }
 
-    List<Vertex> sp(int startX, int startY, int endX, int endY) {
+    List<Vertex> sp(Point start, Point end) {
 
 
         Queue<Vertex> q = new ArrayDeque<>();
         Map<Vertex, Vertex> prev = new HashMap<>();
 
-        grid[startX][startY].dist = 0;
-        q.add(grid[startX][startY]);
+        grid[start.x][start.y].dist = 0;
+        q.add(grid[start.x][start.y]);
 
         while (!q.isEmpty()) {
 
@@ -47,7 +50,7 @@ public class Gridder {
 
         }
 
-        return getShortestPath(prev, grid[endX][endY]);
+        return getShortestPath(prev, grid[end.x][end.y]);
 
     }
 
