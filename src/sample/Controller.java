@@ -78,12 +78,17 @@ public class Controller {
     }
 
     @FXML
-    public void addWall(MouseEvent mouseEvent) {
+    private void addWall(MouseEvent mouseEvent) {
 
         Point mousePos = new Point((int) (mouseEvent.getSceneX() - 100), (int) (mouseEvent.getSceneY() - 0));
 
         mousePos.x = (mousePos.x + (LEN - (mousePos.x % LEN))) - LEN;
         mousePos.y = (mousePos.y + (LEN - (mousePos.y % LEN))) - LEN;
+
+        // handles mouse going outside the canvas
+        if (mousePos.x < 0.0 || mousePos.x >= mainCanvas.getHeight() || mousePos.y < 0 || mousePos.y >= mainCanvas.getWidth()) {
+            return;
+        }
 
         GraphicsContext g = mainCanvas.getGraphicsContext2D();
         g.setFill(Color.BLACK);
@@ -106,7 +111,7 @@ public class Controller {
     }
 
     @FXML
-    public void addStartFinish(MouseEvent mouseEvent) {
+    private void addStartFinish(MouseEvent mouseEvent) {
 
         Point mousePos = new Point((int) (mouseEvent.getSceneX() - 100), (int) (mouseEvent.getSceneY() - 0));
         mousePos.x = (mousePos.x + (LEN - (mousePos.x % LEN))) - LEN;
@@ -138,12 +143,12 @@ public class Controller {
     }
 
     @FXML
-    public void option(KeyEvent keyEvent) {
+    private void option(KeyEvent keyEvent) {
         keyPress = keyEvent.getText().toLowerCase();
     }
 
     @FXML
-    public void startButton(ActionEvent actionEvent) {
+    private void startButton(ActionEvent actionEvent) {
 
         if (!startSet) {
             System.out.println("start not set");
@@ -173,15 +178,16 @@ public class Controller {
             g.fillRect(v.getC() * LEN, v.getR() * LEN, LEN, LEN);
         }
 
+
     }
 
     @FXML
-    public void clearButton() {
+    private void clearButton() {
         resetCanvas();
     }
 
     @FXML
-    public void quitButton() {
+    private void quitButton() {
         System.exit(0);
     }
 
