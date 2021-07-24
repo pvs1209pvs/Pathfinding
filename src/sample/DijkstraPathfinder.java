@@ -13,15 +13,13 @@ public class DijkstraPathfinder {
 
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
-                Vertex v = new Vertex(i, j);
-                v.dist = Integer.MAX_VALUE;
-                grid[i][j] = v;
+                grid[i][j] = new Vertex(i, j, Integer.MAX_VALUE);
             }
         }
 
     }
 
-     List<Vertex> shortestPath(Point end, Point start) {
+    List<Vertex> shortestPath(Point end, Point start) {
 
         final Queue<Vertex> q = new ArrayDeque<>();
         final Map<Vertex, Vertex> prev = new HashMap<>();
@@ -104,9 +102,10 @@ public class DijkstraPathfinder {
         private boolean visited = false;
         private VERTEX_TYPE type = VERTEX_TYPE.PATH;
 
-        public Vertex(int c, int r) {
+        Vertex(int c, int r, int dist) {
             this.c = c;
             this.r = r;
+            this.dist = dist;
         }
 
         @Override

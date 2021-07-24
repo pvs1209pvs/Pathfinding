@@ -9,13 +9,13 @@ import java.util.List;
 
 import static sample.Controller.LEN;
 
-public class PathAnimation extends AnimationTimer {
+public class ShortestPathAnimation extends AnimationTimer {
 
     private final GraphicsContext graphicsContext;
     private final Iterator<DijkstraPathfinder.Vertex> shortestPathIterator;
     private long prevTime = 0;
 
-    PathAnimation(List<DijkstraPathfinder.Vertex> shortestPath, GraphicsContext graphicsContext) {
+    ShortestPathAnimation(List<DijkstraPathfinder.Vertex> shortestPath, GraphicsContext graphicsContext) {
         this.graphicsContext = graphicsContext;
         this.shortestPathIterator = shortestPath.iterator();
     }

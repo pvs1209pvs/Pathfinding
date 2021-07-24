@@ -1,24 +1,15 @@
 package sample;
 
-import javafx.animation.*;
 import javafx.fxml.FXML;
 import javafx.event.ActionEvent;
-import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.Glow;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Path;
-import javafx.scene.shape.Rectangle;
-import javafx.util.Duration;
-import org.w3c.dom.css.Rect;
 
 import java.awt.*;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 public class Controller {
@@ -179,8 +170,7 @@ public class Controller {
         path.remove(0);
         path.remove(path.size() - 1);
 
-        new PathAnimation(path, mainCanvas.getGraphicsContext2D()).start();
-
+        new ShortestPathAnimation(path, mainCanvas.getGraphicsContext2D()).start();
 
     }
 
