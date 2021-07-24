@@ -21,7 +21,7 @@ public class DijkstraPathfinder {
 
     }
 
-    List<Vertex> shortestPath(Point start, Point end) {
+     List<Vertex> shortestPath(Point start, Point end) {
 
         final Queue<Vertex> q = new ArrayDeque<>();
         final Map<Vertex, Vertex> prev = new HashMap<>();

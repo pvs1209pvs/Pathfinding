@@ -1,20 +1,29 @@
 package sample;
 
+import javafx.animation.*;
 import javafx.fxml.FXML;
 import javafx.event.ActionEvent;
+import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.Glow;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Path;
+import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
+import org.w3c.dom.css.Rect;
 
 import java.awt.*;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Controller {
 
-    private final int LEN = 10;
+    public static final int LEN = 10;
 
     private String keyPress = "";
 
@@ -163,20 +172,14 @@ public class Controller {
         start.y /= LEN;
         end.x /= LEN;
         end.y /= LEN;
+
         List<DijkstraPathfinder.Vertex> path = dijkstraPathfinder.shortestPath(start, end);
 
-        GraphicsContext g = mainCanvas.getGraphicsContext2D();
-
+        // remove start and end point from the shortest path
         path.remove(0);
         path.remove(path.size() - 1);
 
-        for (DijkstraPathfinder.Vertex v : path) {
-            g.setFill(Color.rgb(78, 165, 210));
-            g.setStroke(Color.GRAY);
-            g.setLineWidth(0.1);
-            g.strokeRect(v.getC() * LEN, v.getR() * LEN, LEN, LEN);
-            g.fillRect(v.getC() * LEN, v.getR() * LEN, LEN, LEN);
-        }
+        new PathAnimation(path, mainCanvas.getGraphicsContext2D()).start();
 
 
     }
