@@ -173,7 +173,7 @@ public class Controller {
         end.x /= LEN;
         end.y /= LEN;
 
-        List<DijkstraPathfinder.Vertex> path = dijkstraPathfinder.shortestPath(start, end);
+        List<DijkstraPathfinder.Vertex> path = dijkstraPathfinder.shortestPath(end, start);
 
         // remove start and end point from the shortest path
         path.remove(0);

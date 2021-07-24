@@ -21,13 +21,13 @@ public class DijkstraPathfinder {
 
     }
 
-     List<Vertex> shortestPath(Point start, Point end) {
+     List<Vertex> shortestPath(Point end, Point start) {
 
         final Queue<Vertex> q = new ArrayDeque<>();
         final Map<Vertex, Vertex> prev = new HashMap<>();
 
-        grid[start.x][start.y].dist = 0;
-        q.add(grid[start.x][start.y]);
+        grid[end.x][end.y].dist = 0;
+        q.add(grid[end.x][end.y]);
 
         while (!q.isEmpty()) {
 
@@ -46,7 +46,7 @@ public class DijkstraPathfinder {
 
         }
 
-        return getShortestPath(prev, grid[end.x][end.y]);
+        return getShortestPath(prev, grid[start.x][start.y]);
 
     }
 
