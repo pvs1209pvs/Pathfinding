@@ -12,6 +12,11 @@
 
         <Button text="Start" prefWidth="80" onAction="#startButton"
                 style="-fx-background-color: #44d0cd; -fx-text-fill: #ffffff"/>
+
+
+        <Button text="Randoom" prefWidth="80" onAction="#genRandom"
+                style="-fx-background-color: #44d0cd; -fx-text-fill: #ffffff"/>
+
         <Button text="Clear" prefWidth="80" onAction="#clearButton"
                 style="-fx-background-color: #44d0cd; -fx-text-fill: #ffffff"/>
         <Button text="Quit" prefWidth="80" onAction="#quitButton"

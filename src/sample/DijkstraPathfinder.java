@@ -108,6 +108,10 @@ public class DijkstraPathfinder {
             this.dist = dist;
         }
 
+        public Point getPos(){
+            return new Point(c, r);
+        }
+
         @Override
         public String toString() {
             return "[" + c + " " + r + " " + dist + "]";
