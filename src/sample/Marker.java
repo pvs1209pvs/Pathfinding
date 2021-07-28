@@ -41,4 +41,13 @@ public class Marker {
     public Color getColor() {
         return color;
     }
+
+    @Override
+    public String toString() {
+        return "Marker{" +
+                "position=" + position +
+                ", isSet=" + isSet +
+                ", color=" + color +
+                '}';
+    }
 }

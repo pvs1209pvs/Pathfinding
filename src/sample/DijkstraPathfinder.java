@@ -19,13 +19,13 @@ public class DijkstraPathfinder {
 
     }
 
-    List<Vertex> shortestPath(Point end, Point start) {
+    List<Point> shortestPath(Point s, Point e) {
 
         final Queue<Vertex> q = new ArrayDeque<>();
-        final Map<Vertex, Vertex> prev = new HashMap<>();
+        final Map<Point, Point> prev = new HashMap<>();
 
-        grid[end.x][end.y].dist = 0;
-        q.add(grid[end.x][end.y]);
+        grid[s.x][s.y].dist = 0;
+        q.add(grid[s.x][s.y]);
 
         while (!q.isEmpty()) {
 
@@ -33,27 +33,29 @@ public class DijkstraPathfinder {
             final List<Vertex> neighbors = getNeighbors(u);
 
             for (Vertex v : neighbors) {
-                q.add(v);
                 v.visited = true;
+                q.add(v);
+
                 int altDist = u.dist + 1;
                 if (altDist < v.dist) {
                     v.dist = altDist;
-                    prev.put(v, u);
+                    prev.put(v.getPos(), u.getPos());
                 }
+
             }
 
         }
 
-        return getShortestPath(prev, grid[start.x][start.y]);
+        return getShortestPath(prev, grid[e.x][e.y].getPos());
 
     }
 
-    private List<Vertex> getShortestPath(Map<Vertex, Vertex> prev, Vertex end) {
+    private List<Point> getShortestPath(Map<Point, Point> prev, Point end) {
 
-        final List<Vertex> shortestPath = new ArrayList<>();
+        final List<Point> shortestPath = new LinkedList<>();
 
         while (end != null) {
-            shortestPath.add(end);
+            shortestPath.add(0, end);
             end = prev.get(end);
         }
 
@@ -94,7 +96,7 @@ public class DijkstraPathfinder {
         PATH
     }
 
-    static class Vertex implements Comparable<Vertex> {
+    static class Vertex {
 
         private final int c;
         private final int r;
@@ -115,11 +117,6 @@ public class DijkstraPathfinder {
         @Override
         public String toString() {
             return "[" + c + " " + r + " " + dist + "]";
-        }
-
-        @Override
-        public int compareTo(Vertex o) {
-            return Integer.compare(this.dist, o.dist);
         }
 
         public int getC() {

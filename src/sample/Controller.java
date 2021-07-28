@@ -4,12 +4,14 @@ import javafx.fxml.FXML;
 import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Alert;
 import javafx.scene.effect.Glow;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Controller {
@@ -22,6 +24,9 @@ public class Controller {
     private final Marker end = new Marker(Color.rgb(227, 74, 111));
 
     private DijkstraPathfinder dijkstraPathfinder = new DijkstraPathfinder();
+    List<Point> path = new ArrayList<>();
+
+    private boolean pathFound = false;
 
     @FXML
     private Canvas mainCanvas;
@@ -36,8 +41,8 @@ public class Controller {
         drawEmptySpots();
         drawLines();
         keyPress = "";
-        start.setSet(false);
-        end.setSet(false);
+        start.unSet();
+        end.unSet();
         dijkstraPathfinder = new DijkstraPathfinder();
     }
 
@@ -77,8 +82,9 @@ public class Controller {
     private Point mousePosOnCanvas(MouseEvent mouseEvent) {
 
         Point mousePos = new Point((int) (mouseEvent.getSceneX() - 100), (int) (mouseEvent.getSceneY() - 0));
-        mousePos.x = (mousePos.x + (LEN - (mousePos.x % LEN))) - LEN;
-        mousePos.y = (mousePos.y + (LEN - (mousePos.y % LEN))) - LEN;
+        mousePos.x = ((mousePos.x + (LEN - (mousePos.x % LEN))) - LEN) / LEN;
+        mousePos.y = ((mousePos.y + (LEN - (mousePos.y % LEN))) - LEN) / LEN;
+        System.out.println(mousePos);
         return mousePos;
 
     }
@@ -95,13 +101,13 @@ public class Controller {
             return;
         }
 
-        GraphicsContext g = mainCanvas.getGraphicsContext2D();
-        g.setFill(Color.BLACK);
-        g.fillRect(mousePos.x, mousePos.y, LEN, LEN);
+        GraphicsContext graphicsContext2D = mainCanvas.getGraphicsContext2D();
+        graphicsContext2D.setFill(Color.BLACK);
+        graphicsContext2D.fillRect(mousePos.x * LEN, mousePos.y * LEN, LEN, LEN);
 
-        DijkstraPathfinder.Vertex updatedVertex = dijkstraPathfinder.getVertex(mousePos.x / LEN, mousePos.y / LEN);
+        DijkstraPathfinder.Vertex updatedVertex = dijkstraPathfinder.getVertex(mousePos.x, mousePos.y);
         updatedVertex.setType(DijkstraPathfinder.VERTEX_TYPE.WALL);
-        dijkstraPathfinder.setVertex(mousePos.x / LEN, mousePos.y / LEN, updatedVertex);
+        dijkstraPathfinder.setVertex(mousePos.x, mousePos.y, updatedVertex);
 
         if (start.getPosition().x == mousePos.x && start.getPosition().y == mousePos.y) {
             start.unSet();
@@ -112,52 +118,16 @@ public class Controller {
         }
     }
 
-    private void genRandomWalls(double wallDensity) {
-
-        for (int i = 0; i < 50; i++) {
-            for (int j = 0; j < 50; j++) {
-                if (Math.random() < wallDensity) {
-                    Point mousePos = new Point((int) (Math.random() * 500), (int) (Math.random() * 500));
-                    mousePos.x = (mousePos.x + (LEN - (mousePos.x % LEN))) - LEN;
-                    mousePos.y = (mousePos.y + (LEN - (mousePos.y % LEN))) - LEN;
-                    addWall(mousePos);
-                }
-            }
-        }
-
-
-    }
-
     private void setMarker(Marker marker, Point pos) {
 
         GraphicsContext graphicsContext2D = mainCanvas.getGraphicsContext2D();
         graphicsContext2D.setEffect(new Glow(0.9));
 
         if (!marker.isSet()) {
-            graphicsContext2D.setFill(marker.getColor());
             marker.setPosition(pos);
-
-
-            graphicsContext2D.fillRect(marker.getPosition().x, marker.getPosition().y, LEN, LEN);
+            graphicsContext2D.setFill(marker.getColor());
+            graphicsContext2D.fillRect(marker.getPosition().x * LEN, marker.getPosition().y * LEN, LEN, LEN);
         }
-
-    }
-
-    private void genRandomStartEnd() {
-
-        Point mousePos = new Point((int) (Math.random() * 500), (int) (Math.random() * 500));
-        mousePos.x = (mousePos.x + (LEN - (mousePos.x % LEN))) - LEN;
-        mousePos.y = (mousePos.y + (LEN - (mousePos.y % LEN))) - LEN;
-
-        setMarker(start, mousePos);
-
-        do {
-            mousePos = new Point((int) (Math.random() * 500), (int) (Math.random() * 500));
-            mousePos.x = (mousePos.x + (LEN - (mousePos.x % LEN))) - LEN;
-            mousePos.y = (mousePos.y + (LEN - (mousePos.y % LEN))) - LEN;
-
-            setMarker(end, mousePos);
-        } while (start.getPosition().equals(end.getPosition()));
 
     }
 
@@ -173,49 +143,88 @@ public class Controller {
 
     }
 
+    private String isStartFinishSet() {
+
+        if (!start.isSet()) {
+
+            return "s";
+        }
+        if (!end.isSet()) {
+            return "e";
+        }
+
+        return "";
+
+    }
+
+
     @FXML
     private void startButton(ActionEvent actionEvent) {
 
-        if (!start.isSet()) {
-            System.out.println("start not set");
-            return;
+        Alert missingStartFinishAlert = new Alert(Alert.AlertType.ERROR);
+        missingStartFinishAlert.setHeaderText(null);
+        missingStartFinishAlert.setGraphic(null);
+
+        switch (isStartFinishSet()) {
+            case "s" -> {
+                missingStartFinishAlert.setContentText("Starting point not set.");
+                missingStartFinishAlert.showAndWait();
+                return;
+            }
+
+            case "e" -> {
+                missingStartFinishAlert.setContentText("Ending point not set.");
+                missingStartFinishAlert.showAndWait();
+                return;
+            }
         }
-        if (!end.isSet()) {
-            System.out.println("end not set");
-            return;
+
+        path = dijkstraPathfinder.shortestPath(start.getPosition(), end.getPosition());
+        path.remove(end.getPosition());
+        path.remove(start.getPosition());
+
+        if (path.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText(null);
+            alert.setGraphic(null);
+            alert.setContentText(pathFound ? "Path already found." : "No path exists.");
+            alert.showAndWait();
+        } else {
+            if (!pathFound) {
+                new ShortestPathAnimation(path, mainCanvas.getGraphicsContext2D()).start();
+                pathFound = true;
+            }
         }
 
-        start.getPosition().x /= LEN;
-        start.getPosition().y /= LEN;
-        end.getPosition().x /= LEN;
-        end.getPosition().y /= LEN;
+    }
 
-        List<DijkstraPathfinder.Vertex> path = dijkstraPathfinder.shortestPath(end.getPosition(), start.getPosition());
+    private void genRandomWalls(double wallDensity) {
 
-        // remove start and end point from the shortest path
-//        System.out.println(start.getPosition() + " " + end.getPosition());
-//        System.out.println(path.get(0).getC() + "," + path.get(0).getR());
-//        System.out.println(path.get(path.size() - 1).getC() + "," + path.get(path.size() - 1).getR());
-//        System.out.println(path);
-//        path.remove(0);
-//        path.remove(path.size() - 1);
+        for (int i = 0; i < mainCanvas.getHeight() / LEN; i++) {
+            for (int j = 0; j < mainCanvas.getWidth() / LEN; j++) {
+                if (Math.random() < wallDensity) {
+                    addWall(new Point((int) (Math.random() * 50), (int) (Math.random() * 50)));
+                }
+            }
+        }
 
-        System.out.println(start.getPosition() + " " + end.getPosition());
-        System.out.println(path);
-        path.removeIf(v ->
-                (v.getR() == start.getPosition().x && v.getC() == start.getPosition().y) ||
-                        (v.getR() == end.getPosition().x && v.getC() == end.getPosition().y));
-        System.out.println(path);
-        System.out.println();
 
-        new ShortestPathAnimation(path, mainCanvas.getGraphicsContext2D()).start();
+    }
+
+    private void genRandomStartEnd() {
+
+        setMarker(start, new Point((int) (Math.random() * 50), (int) (Math.random() * 50)));
+
+        do {
+            setMarker(end, new Point((int) (Math.random() * 50), (int) (Math.random() * 50)));
+        } while (start.getPosition().equals(end.getPosition()));
 
     }
 
     @FXML
     public void genRandom(ActionEvent actionEvent) {
         resetCanvas();
-        genRandomWalls(Math.random());
+        genRandomWalls(0.6);
         genRandomStartEnd();
     }
 

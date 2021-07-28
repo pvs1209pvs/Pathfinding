@@ -2,8 +2,10 @@ package sample;
 
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.effect.Light;
 import javafx.scene.paint.Color;
 
+import java.awt.*;
 import java.util.Iterator;
 import java.util.List;
 
@@ -12,10 +14,10 @@ import static sample.Controller.LEN;
 public class ShortestPathAnimation extends AnimationTimer {
 
     private final GraphicsContext graphicsContext;
-    private final Iterator<DijkstraPathfinder.Vertex> shortestPathIterator;
+    private final Iterator<Point> shortestPathIterator;
     private long prevTime = 0;
 
-    ShortestPathAnimation(List<DijkstraPathfinder.Vertex> shortestPath, GraphicsContext graphicsContext) {
+    ShortestPathAnimation(List<Point> shortestPath, GraphicsContext graphicsContext) {
         this.graphicsContext = graphicsContext;
         this.shortestPathIterator = shortestPath.iterator();
     }
@@ -27,11 +29,11 @@ public class ShortestPathAnimation extends AnimationTimer {
             prevTime = l;
 
             if(shortestPathIterator.hasNext()){
-                DijkstraPathfinder.Vertex v = shortestPathIterator.next();
+                Point v = shortestPathIterator.next();
                 graphicsContext.setFill(Color.rgb(78, 165, 210));
                 graphicsContext.setStroke(Color.GRAY);
                 graphicsContext.setLineWidth(0.1);
-                graphicsContext.fillRect(v.getC() * LEN, v.getR() * LEN, LEN, LEN);
+                graphicsContext.fillRect(v.x * LEN, v.y * LEN, LEN, LEN);
             }
 
         }
