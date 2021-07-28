@@ -5,6 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
+import javafx.scene.control.CheckBox;
 import javafx.scene.effect.Glow;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -23,7 +24,7 @@ public class Controller {
     private final Marker start = new Marker(Color.rgb(96, 165, 97));
     private final Marker end = new Marker(Color.rgb(227, 74, 111));
 
-    private DijkstraPathfinder dijkstraPathfinder = new DijkstraPathfinder();
+    private final DijkstraPathfinder dijkstraPathfinder = new DijkstraPathfinder();
     List<Point> path = new ArrayList<>();
 
     private boolean pathFound = false;
@@ -33,94 +34,122 @@ public class Controller {
     @FXML
     private Canvas mainCanvas;
 
+    @FXML
+    public static CheckBox diagonalMoves;
 
     @FXML
     public void initialize() {
         mainCanvas.addEventFilter(MouseEvent.ANY, (e) -> mainCanvas.requestFocus());
         graphicsContext2D = mainCanvas.getGraphicsContext2D();
+        diagonalMoves = new CheckBox();
         resetCanvas();
     }
 
+    /**
+     * Restores every state to default.
+     */
     private void resetCanvas() {
-        drawEmptySpots();
+        clearCanvas();
         drawLines();
         keyPress = "";
-        start.unSet();
-        end.unSet();
-        dijkstraPathfinder = new DijkstraPathfinder();
+        start.disable();
+        end.disable();
+        dijkstraPathfinder.clearGrid();
+        path.clear();
+        pathFound = false;
     }
 
-    private void drawEmptySpots() {
-
+    /**
+     * Sets the color of canvas to white.
+     */
+    private void clearCanvas() {
         graphicsContext2D.setFill(Color.WHITE);
-
-        for (int i = 0; i < mainCanvas.getHeight(); i += LEN) {
-            for (int j = 0; j < mainCanvas.getWidth(); j += LEN) {
-                graphicsContext2D.fillRect(i, j, LEN, LEN);
-            }
-        }
-
-        graphicsContext2D.setFill(Color.BLACK);
-
+        graphicsContext2D.fillRect(0, 0, mainCanvas.getHeight(), mainCanvas.getWidth());
     }
 
+    /**
+     * Draws horizontal and vertical lines on the canvas.
+     */
     private void drawLines() {
 
-        graphicsContext2D.setLineWidth(0.1);
         graphicsContext2D.setFill(Color.GRAY);
+        graphicsContext2D.setLineWidth(0.1);
 
         for (int i = 0; i < mainCanvas.getHeight(); i += LEN) {
             graphicsContext2D.strokeLine(0, i, mainCanvas.getWidth(), i);
             graphicsContext2D.strokeLine(i, 0, i, mainCanvas.getHeight());
         }
 
-        graphicsContext2D.setFill(Color.BLACK);
-
     }
 
+    /**
+     * Returns the position of mouse on canvas.
+     * @param mouseEvent Mouseevent
+     * @return Returns the position of the mouse on canvas.
+     */
     private Point mousePosOnCanvas(MouseEvent mouseEvent) {
 
-        Point mousePos = new Point((int) (mouseEvent.getSceneX() - 100), (int) (mouseEvent.getSceneY() - 0));
+        // UI window is 600*500. Canvas is 500*500. -100 and -0 maps mouse's window co-ordinates on canvas'
+        Point mousePos = new Point((int) (mouseEvent.getSceneX() - 150), (int) (mouseEvent.getSceneY() - 0));
+
+        // finds the nearest factor of 10 for x and y
         mousePos.x = ((mousePos.x + (LEN - (mousePos.x % LEN))) - LEN) / LEN;
         mousePos.y = ((mousePos.y + (LEN - (mousePos.y % LEN))) - LEN) / LEN;
-        System.out.println(mousePos);
+
         return mousePos;
 
     }
 
     @FXML
     private void addWall(MouseEvent mouseEvent) {
-        addWall(mousePosOnCanvas(mouseEvent));
-    }
 
-    private void addWall(Point mousePos) {
-
-        // handles mouse going outside the canvas
-        if (mousePos.x < 0.0 || mousePos.x >= mainCanvas.getHeight() || mousePos.y < 0 || mousePos.y >= mainCanvas.getWidth()) {
-            return;
+        if (mouseEvent.getEventType() == MouseEvent.MOUSE_DRAGGED) {
+            Point mousePos = mousePosOnCanvas(mouseEvent);
+            // makes sure mouse is inside the canvas
+            if ((mousePos.x >= 0 && mousePos.x < mainCanvas.getHeight()/LEN) && (mousePos.y >= 0 && mousePos.y < mainCanvas.getHeight()/LEN)) {
+                addWall(mousePos);
+            }
         }
 
+    }
+
+    /**
+     * Adds a wall to the grid.
+     * @param pos Position where the wall needs to be added.
+     */
+    private void addWall(Point pos) {
+
+        // draws wall on canvas
         graphicsContext2D.setFill(Color.BLACK);
-        graphicsContext2D.fillRect(mousePos.x * LEN, mousePos.y * LEN, LEN, LEN);
+        graphicsContext2D.fillRect(pos.x * LEN, pos.y * LEN, LEN, LEN);
 
-        DijkstraPathfinder.Vertex updatedVertex = dijkstraPathfinder.getVertex(mousePos.x, mousePos.y);
+        // adds wall to grid
+        DijkstraPathfinder.Vertex updatedVertex = dijkstraPathfinder.getVertex(pos.x, pos.y);
         updatedVertex.setType(DijkstraPathfinder.VERTEX_TYPE.WALL);
-        dijkstraPathfinder.setVertex(mousePos.x, mousePos.y, updatedVertex);
+        dijkstraPathfinder.setVertex(pos.x, pos.y, updatedVertex);
 
-        if (start.getPosition().x == mousePos.x && start.getPosition().y == mousePos.y) {
-            start.unSet();
+        // draws wall over start and removes start
+        if (start.getPosition().x == pos.x && start.getPosition().y == pos.y) {
+            start.disable();
         }
 
-        if (end.getPosition().x == mousePos.x && end.getPosition().y == mousePos.y) {
-            end.unSet();
+        // draws wall over end and removes end
+        if (end.getPosition().x == pos.x && end.getPosition().y == pos.y) {
+            end.disable();
         }
+
     }
 
+    /**
+     * Adds marker to the grid.
+     * @param marker Type of the marker that needs to be placed.
+     * @param pos Position where the marker needs to be placed.
+     */
     private void setMarker(Marker marker, Point pos) {
 
         graphicsContext2D.setEffect(new Glow(0.9));
 
-        if (!marker.isSet()) {
+        if (!marker.getEnabled()) {
             marker.setPosition(pos);
             graphicsContext2D.setFill(marker.getColor());
             graphicsContext2D.fillRect(marker.getPosition().x * LEN, marker.getPosition().y * LEN, LEN, LEN);
@@ -140,40 +169,23 @@ public class Controller {
 
     }
 
-    private String isStartFinishSet() {
-
-        if (!start.isSet()) {
-            return "s";
-        }
-
-        if (!end.isSet()) {
-            return "e";
-        }
-
-        return "";
-
-    }
-
-
     @FXML
     private void startButton(ActionEvent actionEvent) {
 
-        Alert missingStartFinishAlert = new Alert(Alert.AlertType.ERROR);
-        missingStartFinishAlert.setHeaderText(null);
-        missingStartFinishAlert.setGraphic(null);
+        Alert missingMarkerAlert = new Alert(Alert.AlertType.ERROR);
+        missingMarkerAlert.setHeaderText(null);
+        missingMarkerAlert.setGraphic(null);
 
-        switch (isStartFinishSet()) {
-            case "s" -> {
-                missingStartFinishAlert.setContentText("Starting point not set.");
-                missingStartFinishAlert.showAndWait();
-                return;
-            }
+        if(!start.getEnabled()){
+            missingMarkerAlert.setContentText("Starting point not set.");
+            missingMarkerAlert.showAndWait();
+            return;
+        }
 
-            case "e" -> {
-                missingStartFinishAlert.setContentText("Ending point not set.");
-                missingStartFinishAlert.showAndWait();
-                return;
-            }
+        if (!end.getEnabled()) {
+            missingMarkerAlert.setContentText("Ending point not set.");
+            missingMarkerAlert.showAndWait();
+            return;
         }
 
         path = dijkstraPathfinder.shortestPath(start.getPosition(), end.getPosition());
@@ -195,25 +207,31 @@ public class Controller {
 
     }
 
+    /**
+     * Covers a percentage of the grid with walls.
+     * @param wallDensity The percentage of the gird that needs to covered with wall.
+     */
     private void genRandomWalls(double wallDensity) {
 
         for (int i = 0; i < mainCanvas.getHeight() / LEN; i++) {
             for (int j = 0; j < mainCanvas.getWidth() / LEN; j++) {
                 if (Math.random() < wallDensity) {
-                    addWall(new Point((int) (Math.random() * 50), (int) (Math.random() * 50)));
+                    addWall(new Point((int) (Math.random() * mainCanvas.getHeight()/LEN), (int) (Math.random() * mainCanvas.getHeight()/LEN)));
                 }
             }
         }
 
-
     }
 
+    /**
+     * Adds starting and ending point at random positions.
+     */
     private void genRandomStartEnd() {
 
-        setMarker(start, new Point((int) (Math.random() * 50), (int) (Math.random() * 50)));
+        setMarker(start, new Point((int) (Math.random() * mainCanvas.getHeight()/LEN), (int) (Math.random() * mainCanvas.getHeight()/LEN)));
 
         do {
-            setMarker(end, new Point((int) (Math.random() * 50), (int) (Math.random() * 50)));
+            setMarker(end, new Point((int) (Math.random() * mainCanvas.getHeight()/LEN), (int) (Math.random() * mainCanvas.getHeight()/LEN)));
         } while (start.getPosition().equals(end.getPosition()));
 
     }
@@ -221,7 +239,7 @@ public class Controller {
     @FXML
     public void genRandom(ActionEvent actionEvent) {
         resetCanvas();
-        genRandomWalls(0.6);
+        genRandomWalls(0.25);
         genRandomStartEnd();
     }
 
@@ -240,9 +258,7 @@ public class Controller {
         System.exit(0);
     }
 
-
+    public void flip(ActionEvent actionEvent) {
+        diagonalMoves.fire();
+    }
 }
-
-/*
-  TODO Can you place wall on start/end?
- */

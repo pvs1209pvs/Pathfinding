@@ -6,24 +6,24 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 
+<?import javafx.scene.control.CheckBox?>
 <HBox fx:controller="sample.Controller" xmlns:fx="http://javafx.com/fxml" alignment="center">
 
-    <VBox prefWidth="130" alignment="CENTER" spacing="10">
+    <VBox prefWidth="150" alignment="CENTER" spacing="10">
 
         <Button text="Start" prefWidth="80" onAction="#startButton"
                 style="-fx-background-color: #44d0cd; -fx-text-fill: #ffffff"/>
-
-
-        <Button text="Randoom" prefWidth="80" onAction="#genRandom"
+        <Button text="Random" prefWidth="80" onAction="#genRandom"
                 style="-fx-background-color: #44d0cd; -fx-text-fill: #ffffff"/>
-
         <Button text="Clear" prefWidth="80" onAction="#clearButton"
                 style="-fx-background-color: #44d0cd; -fx-text-fill: #ffffff"/>
         <Button text="Quit" prefWidth="80" onAction="#quitButton"
                 style="-fx-background-color: #44d0cd; -fx-text-fill: #ffffff"/>
+        <CheckBox fx:id="diagonalMoves" onAction="#flip" text="Diagonal Moves"/>
+
 
         <Label text="Legends"
-               style="-fx-font-weight: bold; -fx-background-radius: 2;-fx-label-padding: 2; -fx-max-width: 60; -fx-alignment: center"/>
+               style="-fx-font-weight: bold; -fx-background-radius: 2;-fx-label-padding: 2; -fx-max-width: 80; -fx-alignment: center"/>
         <Label text="Start" textFill="60A561FF"
                style="-fx-background-radius: 2;-fx-label-padding: 2; -fx-max-width: 60; -fx-alignment: center;"/>
         <Label text="Finish" textFill="E34A6FFF"
@@ -33,7 +33,7 @@
         <Label text="Path" textFill="4EA5D2FF"
                style="-fx-background-radius: 2;  -fx-label-padding: 2; -fx-max-width: 60; -fx-alignment: center"/>
         <Label text="Tutorial"
-               style="-fx-font-weight: bold; -fx-background-radius: 2;-fx-label-padding: 2; -fx-max-width: 60; -fx-alignment: center"/>
+               style="-fx-font-weight: bold; -fx-background-radius: 2;-fx-label-padding: 2; -fx-max-width: 80; -fx-alignment: center"/>
 
         <TextFlow style="-fx-alignment: center">
             <Text text="Drag mouse to add "/>

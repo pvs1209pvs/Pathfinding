@@ -7,38 +7,38 @@ import java.awt.*;
 public class Marker {
 
     private Point position;
-    private boolean isSet;
+    private boolean isEnabled;
     private final Color color;
 
-    public Marker(Color colors) {
+    Marker(Color colors) {
         this.position = new Point(-1, -1);
-        this.isSet = false;
+        this.isEnabled = false;
         this.color = colors;
     }
 
-    void unSet(){
+    void disable() {
         this.position = new Point(-1, -1);
-        this.isSet = false;
+        this.isEnabled = false;
     }
 
-    public void setPosition(Point position) {
+    void setPosition(Point position) {
         this.position = position;
-        this.isSet = true;
+        this.isEnabled = true;
     }
 
-    public void setSet(boolean set) {
-        isSet = set;
+    void setEnabled(boolean enabled) {
+        isEnabled = enabled;
     }
 
-    public Point getPosition() {
+    Point getPosition() {
         return position;
     }
 
-    public boolean isSet() {
-        return isSet;
+    boolean getEnabled() {
+        return isEnabled;
     }
 
-    public Color getColor() {
+    Color getColor() {
         return color;
     }
 
@@ -46,7 +46,7 @@ public class Marker {
     public String toString() {
         return "Marker{" +
                 "position=" + position +
-                ", isSet=" + isSet +
+                ", isSet=" + isEnabled +
                 ", color=" + color +
                 '}';
     }

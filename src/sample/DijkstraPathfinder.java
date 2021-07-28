@@ -4,6 +4,8 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
+import static sample.Controller.diagonalMoves;
+
 public class DijkstraPathfinder {
 
     private final int SIZE = 50;
@@ -11,12 +13,16 @@ public class DijkstraPathfinder {
 
     DijkstraPathfinder() {
 
+        clearGrid();
+
+    }
+
+    void clearGrid() {
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
                 grid[i][j] = new Vertex(i, j, Integer.MAX_VALUE);
             }
         }
-
     }
 
     List<Point> shortestPath(Point s, Point e) {
@@ -67,10 +73,21 @@ public class DijkstraPathfinder {
 
         final List<Vertex> neighbors = new ArrayList<>();
 
-        final int[] vectorC = new int[]{-1, 1, 0, 0, -1, -1, 1, 1};
-        final int[] vectorR = new int[]{0, 0, -1, 1, -1, 1, -1, 1};
+        final int[] vectorC;
+        final int[] vectorR;
 
-        for (int i = 0; i < 8; i++) {
+
+        System.out.println(diagonalMoves.isSelected());
+        if (diagonalMoves.isSelected()) {
+            vectorC = new int[]{-1, 1, 0, 0, -1, -1, 1, 1};
+            vectorR = new int[]{0, 0, -1, 1, -1, 1, -1, 1};
+        } else {
+            vectorC = new int[]{-1, 1, 0, 0};
+            vectorR = new int[]{0, 0, -1, 1};
+        }
+
+
+        for (int i = 0; i < vectorC.length; i++) {
             int newC = u.c + vectorC[i];
             int newR = u.r + vectorR[i];
 
@@ -83,11 +100,11 @@ public class DijkstraPathfinder {
 
     }
 
-    public void setVertex(int x, int y, Vertex v) {
+    void setVertex(int x, int y, Vertex v) {
         this.grid[x][y] = v;
     }
 
-    public Vertex getVertex(int x, int y) {
+    Vertex getVertex(int x, int y) {
         return this.grid[x][y];
     }
 
@@ -110,7 +127,7 @@ public class DijkstraPathfinder {
             this.dist = dist;
         }
 
-        public Point getPos(){
+        Point getPos() {
             return new Point(c, r);
         }
 
