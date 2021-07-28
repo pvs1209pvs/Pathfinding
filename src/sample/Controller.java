@@ -18,11 +18,9 @@ public class Controller {
 
     private String keyPress = "";
 
-    private boolean startSet = false;
-    private boolean endSet = false;
 
-    private Point start = new Point(-1, -1);
-    private Point end = new Point(-1, -1);
+    private Marker start = new Marker(Color.rgb(96, 165, 97));
+    private Marker end = new Marker(Color.rgb(227, 74, 111));
 
     private DijkstraPathfinder dijkstraPathfinder = new DijkstraPathfinder();
 
@@ -39,8 +37,8 @@ public class Controller {
         drawEmptySpots();
         drawLines();
         keyPress = "";
-        startSet = false;
-        endSet = false;
+        start.setSet(false);
+        end.setSet(false);
         dijkstraPathfinder = new DijkstraPathfinder();
     }
 
@@ -98,14 +96,24 @@ public class Controller {
         updatedVertex.setType(DijkstraPathfinder.VERTEX_TYPE.WALL);
         dijkstraPathfinder.setVertex(mousePos.x / LEN, mousePos.y / LEN, updatedVertex);
 
-        if (start.x == mousePos.x && start.y == mousePos.y) {
-            start = new Point(-1, -1);
-            startSet = false;
+        if (start.getPosition().x == mousePos.x && start.getPosition().y == mousePos.y) {
+            start.unSet();
         }
 
-        if (end.x == mousePos.x && end.y == mousePos.y) {
-            end = new Point(-1, -1);
-            endSet = false;
+        if (end.getPosition().x == mousePos.x && end.getPosition().y == mousePos.y) {
+            end.unSet();
+        }
+
+    }
+
+    private void setMarker(Marker marker, Point pos) {
+
+        GraphicsContext graphicsContext2D = mainCanvas.getGraphicsContext2D();
+
+        if (!marker.isSet()) {
+            graphicsContext2D.setFill(marker.getColor());
+            marker.setPosition(pos);
+            graphicsContext2D.fillRect(marker.getPosition().x, marker.getPosition().y, LEN, LEN);
         }
 
     }
@@ -117,28 +125,15 @@ public class Controller {
         mousePos.x = (mousePos.x + (LEN - (mousePos.x % LEN))) - LEN;
         mousePos.y = (mousePos.y + (LEN - (mousePos.y % LEN))) - LEN;
 
-        GraphicsContext g = mainCanvas.getGraphicsContext2D();
+        GraphicsContext graphicsContext2D = mainCanvas.getGraphicsContext2D();
+        graphicsContext2D.setEffect(new Glow(0.9));
 
-        Glow glow = new Glow();
-        glow.setLevel(0.9);
-        g.setEffect(glow);
-
-        if (!startSet && keyPress.equals("s")) {
-            g.setFill(Color.rgb(96, 165, 97));
-            start = new Point(mousePos.x, mousePos.y);
-            startSet = true;
+        switch (keyPress) {
+            case "s" -> setMarker(start, mousePos);
+            case "e" -> setMarker(end, mousePos);
         }
-
-        if (!endSet && keyPress.equals("e")) {
-            g.setFill(Color.rgb(227, 74, 111));
-            end = new Point(mousePos.x, mousePos.y);
-            endSet = true;
-        }
-
+        
         keyPress = "";
-
-        g.fillRect(mousePos.x, mousePos.y, LEN, LEN);
-        g.setFill(Color.rgb(3, 7, 30));
 
     }
 
@@ -150,21 +145,21 @@ public class Controller {
     @FXML
     private void startButton(ActionEvent actionEvent) {
 
-        if (!startSet) {
+        if (!start.isSet()) {
             System.out.println("start not set");
             return;
         }
-        if (!endSet) {
+        if (!end.isSet()) {
             System.out.println("end not set");
             return;
         }
 
-        start.x /= LEN;
-        start.y /= LEN;
-        end.x /= LEN;
-        end.y /= LEN;
+        start.getPosition().x /= LEN;
+        start.getPosition().y /= LEN;
+        end.getPosition().x /= LEN;
+        end.getPosition().y /= LEN;
 
-        List<DijkstraPathfinder.Vertex> path = dijkstraPathfinder.shortestPath(end, start);
+        List<DijkstraPathfinder.Vertex> path = dijkstraPathfinder.shortestPath(end.getPosition(), start.getPosition());
 
         // remove start and end point from the shortest path
         path.remove(0);
