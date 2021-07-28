@@ -28,12 +28,16 @@ public class Controller {
 
     private boolean pathFound = false;
 
+    private GraphicsContext graphicsContext2D;
+
     @FXML
     private Canvas mainCanvas;
+
 
     @FXML
     public void initialize() {
         mainCanvas.addEventFilter(MouseEvent.ANY, (e) -> mainCanvas.requestFocus());
+        graphicsContext2D = mainCanvas.getGraphicsContext2D();
         resetCanvas();
     }
 
@@ -48,34 +52,29 @@ public class Controller {
 
     private void drawEmptySpots() {
 
-        GraphicsContext g = mainCanvas.getGraphicsContext2D();
-
-        g.setFill(Color.WHITE);
+        graphicsContext2D.setFill(Color.WHITE);
 
         for (int i = 0; i < mainCanvas.getHeight(); i += LEN) {
             for (int j = 0; j < mainCanvas.getWidth(); j += LEN) {
-                g.fillRect(i, j, LEN, LEN);
-
+                graphicsContext2D.fillRect(i, j, LEN, LEN);
             }
         }
 
-        g.setFill(Color.BLACK);
+        graphicsContext2D.setFill(Color.BLACK);
 
     }
 
     private void drawLines() {
 
-        GraphicsContext g = mainCanvas.getGraphicsContext2D();
-
-        g.setLineWidth(0.1);
-        g.setFill(Color.GRAY);
+        graphicsContext2D.setLineWidth(0.1);
+        graphicsContext2D.setFill(Color.GRAY);
 
         for (int i = 0; i < mainCanvas.getHeight(); i += LEN) {
-            g.strokeLine(0, i, mainCanvas.getWidth(), i);
-            g.strokeLine(i, 0, i, mainCanvas.getHeight());
+            graphicsContext2D.strokeLine(0, i, mainCanvas.getWidth(), i);
+            graphicsContext2D.strokeLine(i, 0, i, mainCanvas.getHeight());
         }
 
-        g.setFill(Color.BLACK);
+        graphicsContext2D.setFill(Color.BLACK);
 
     }
 
@@ -101,7 +100,6 @@ public class Controller {
             return;
         }
 
-        GraphicsContext graphicsContext2D = mainCanvas.getGraphicsContext2D();
         graphicsContext2D.setFill(Color.BLACK);
         graphicsContext2D.fillRect(mousePos.x * LEN, mousePos.y * LEN, LEN, LEN);
 
@@ -120,7 +118,6 @@ public class Controller {
 
     private void setMarker(Marker marker, Point pos) {
 
-        GraphicsContext graphicsContext2D = mainCanvas.getGraphicsContext2D();
         graphicsContext2D.setEffect(new Glow(0.9));
 
         if (!marker.isSet()) {
@@ -146,9 +143,9 @@ public class Controller {
     private String isStartFinishSet() {
 
         if (!start.isSet()) {
-
             return "s";
         }
+
         if (!end.isSet()) {
             return "e";
         }
