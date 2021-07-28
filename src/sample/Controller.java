@@ -18,9 +18,8 @@ public class Controller {
 
     private String keyPress = "";
 
-
-    private Marker start = new Marker(Color.rgb(96, 165, 97));
-    private Marker end = new Marker(Color.rgb(227, 74, 111));
+    private final Marker start = new Marker(Color.rgb(96, 165, 97));
+    private final Marker end = new Marker(Color.rgb(227, 74, 111));
 
     private DijkstraPathfinder dijkstraPathfinder = new DijkstraPathfinder();
 
@@ -78,10 +77,7 @@ public class Controller {
     @FXML
     private void addWall(MouseEvent mouseEvent) {
 
-        Point mousePos = new Point((int) (mouseEvent.getSceneX() - 100), (int) (mouseEvent.getSceneY() - 0));
-
-        mousePos.x = (mousePos.x + (LEN - (mousePos.x % LEN))) - LEN;
-        mousePos.y = (mousePos.y + (LEN - (mousePos.y % LEN))) - LEN;
+        Point mousePos = mousePosOnCanvas(mouseEvent);
 
         // handles mouse going outside the canvas
         if (mousePos.x < 0.0 || mousePos.x >= mainCanvas.getHeight() || mousePos.y < 0 || mousePos.y >= mainCanvas.getWidth()) {
@@ -106,6 +102,15 @@ public class Controller {
 
     }
 
+    private Point mousePosOnCanvas(MouseEvent mouseEvent) {
+        Point mousePos = new Point((int) (mouseEvent.getSceneX() - 100), (int) (mouseEvent.getSceneY() - 0));
+
+        mousePos.x = (mousePos.x + (LEN - (mousePos.x % LEN))) - LEN;
+        mousePos.y = (mousePos.y + (LEN - (mousePos.y % LEN))) - LEN;
+
+        return mousePos;
+    }
+
     private void setMarker(Marker marker, Point pos) {
 
         GraphicsContext graphicsContext2D = mainCanvas.getGraphicsContext2D();
@@ -121,9 +126,7 @@ public class Controller {
     @FXML
     private void addStartFinish(MouseEvent mouseEvent) {
 
-        Point mousePos = new Point((int) (mouseEvent.getSceneX() - 100), (int) (mouseEvent.getSceneY() - 0));
-        mousePos.x = (mousePos.x + (LEN - (mousePos.x % LEN))) - LEN;
-        mousePos.y = (mousePos.y + (LEN - (mousePos.y % LEN))) - LEN;
+        Point mousePos = mousePosOnCanvas(mouseEvent);
 
         GraphicsContext graphicsContext2D = mainCanvas.getGraphicsContext2D();
         graphicsContext2D.setEffect(new Glow(0.9));
@@ -132,7 +135,7 @@ public class Controller {
             case "s" -> setMarker(start, mousePos);
             case "e" -> setMarker(end, mousePos);
         }
-        
+
         keyPress = "";
 
     }
