@@ -76,8 +76,6 @@ public class DijkstraPathfinder {
         final int[] vectorC;
         final int[] vectorR;
 
-
-        System.out.println(diagonalMoves.isSelected());
         if (diagonalMoves.isSelected()) {
             vectorC = new int[]{-1, 1, 0, 0, -1, -1, 1, 1};
             vectorR = new int[]{0, 0, -1, 1, -1, 1, -1, 1};
@@ -134,14 +132,6 @@ public class DijkstraPathfinder {
         @Override
         public String toString() {
             return "[" + c + " " + r + " " + dist + "]";
-        }
-
-        public int getC() {
-            return c;
-        }
-
-        public int getR() {
-            return r;
         }
 
         public void setType(VERTEX_TYPE type) {
