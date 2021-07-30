@@ -4,20 +4,16 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-import static sample.Controller.diagonalMoves;
-
 public class DijkstraPathfinder {
 
     private final int SIZE = 50;
     private final Vertex[][] grid = new Vertex[SIZE][SIZE];
 
     DijkstraPathfinder() {
-
-        clearGrid();
-
+        initGrid();
     }
 
-    void clearGrid() {
+    void initGrid() {
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
                 grid[i][j] = new Vertex(i, j, Integer.MAX_VALUE);
@@ -61,7 +57,7 @@ public class DijkstraPathfinder {
         final List<Point> shortestPath = new LinkedList<>();
 
         while (end != null) {
-            shortestPath.add(0, end);
+            shortestPath.add(0,end);
             end = prev.get(end);
         }
 
@@ -73,19 +69,10 @@ public class DijkstraPathfinder {
 
         final List<Vertex> neighbors = new ArrayList<>();
 
-        final int[] vectorC;
-        final int[] vectorR;
+        final int[] vectorC = new int[]{-1, 1, 0, 0, -1, -1, 1, 1};
+        final int[] vectorR = new int[]{0, 0, -1, 1, -1, 1, -1, 1};
 
-        if (diagonalMoves.isSelected()) {
-            vectorC = new int[]{-1, 1, 0, 0, -1, -1, 1, 1};
-            vectorR = new int[]{0, 0, -1, 1, -1, 1, -1, 1};
-        } else {
-            vectorC = new int[]{-1, 1, 0, 0};
-            vectorR = new int[]{0, 0, -1, 1};
-        }
-
-
-        for (int i = 0; i < vectorC.length; i++) {
+        for (int i = 0; i < 8; i++) {
             int newC = u.c + vectorC[i];
             int newR = u.r + vectorR[i];
 
@@ -98,11 +85,11 @@ public class DijkstraPathfinder {
 
     }
 
-    void setVertex(int x, int y, Vertex v) {
+    public void setVertex(int x, int y, Vertex v) {
         this.grid[x][y] = v;
     }
 
-    Vertex getVertex(int x, int y) {
+    public Vertex getVertex(int x, int y) {
         return this.grid[x][y];
     }
 
@@ -116,22 +103,32 @@ public class DijkstraPathfinder {
         private final int c;
         private final int r;
         private int dist;
-        private boolean visited = false;
-        private VERTEX_TYPE type = VERTEX_TYPE.PATH;
+        private boolean visited;
+        private VERTEX_TYPE type;
 
         Vertex(int c, int r, int dist) {
             this.c = c;
             this.r = r;
             this.dist = dist;
+            this.visited = false;
+            this.type = VERTEX_TYPE.PATH;
         }
 
-        Point getPos() {
+        public Point getPos() {
             return new Point(c, r);
         }
 
         @Override
         public String toString() {
             return "[" + c + " " + r + " " + dist + "]";
+        }
+
+        public int getC() {
+            return c;
+        }
+
+        public int getR() {
+            return r;
         }
 
         public void setType(VERTEX_TYPE type) {
