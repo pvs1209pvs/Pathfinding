@@ -16,14 +16,14 @@ import java.util.List;
 
 public class Controller {
 
-    public static final int LEN = 10;
 
     private String keyPress = "";
 
     private final Marker start = new Marker(Color.rgb(96, 165, 97));
     private final Marker end = new Marker(Color.rgb(227, 74, 111));
 
-    private final DijkstraPathfinder dijkstraPathfinder = new DijkstraPathfinder();
+    private static int gridSize = 5;
+    private DijkstraPathfinder dijkstraPathfinder = new DijkstraPathfinder(gridSize);
     private List<Point> path = new ArrayList<>();
 
     private boolean pathFound = false;
@@ -33,10 +33,14 @@ public class Controller {
     @FXML
     private Canvas mainCanvas;
 
+    public static int LEN = 500/gridSize;
+
+
     @FXML
     public void initialize() {
         mainCanvas.addEventFilter(MouseEvent.ANY, e -> mainCanvas.requestFocus());
         graphicsContext2D = mainCanvas.getGraphicsContext2D();
+
         resetCanvas();
     }
 
@@ -50,7 +54,7 @@ public class Controller {
         start.unSet();
         end.unSet();
 
-        dijkstraPathfinder.initGrid();
+        dijkstraPathfinder = new DijkstraPathfinder(gridSize);
         pathFound = false;
         path.clear();
 
@@ -197,7 +201,7 @@ public class Controller {
         for (int i = 0; i < mainCanvas.getHeight() / LEN; i++) {
             for (int j = 0; j < mainCanvas.getWidth() / LEN; j++) {
                 if (Math.random() < wallDensity) {
-                    addWall(new Point((int) (Math.random() * 50), (int) (Math.random() * 50)));
+                    addWall(new Point((int) (Math.random() * dijkstraPathfinder.getSize()), (int) (Math.random() * dijkstraPathfinder.getSize())));
                 }
             }
         }
@@ -207,10 +211,10 @@ public class Controller {
 
     private void genRandomStartEnd() {
 
-        setMarker(start, new Point((int) (Math.random() * 50), (int) (Math.random() * 50)));
+        setMarker(start, new Point((int) (Math.random() * dijkstraPathfinder.getSize()), (int) (Math.random() * dijkstraPathfinder.getSize())));
 
         do {
-            setMarker(end, new Point((int) (Math.random() * 50), (int) (Math.random() * 50)));
+            setMarker(end, new Point((int) (Math.random() * dijkstraPathfinder.getSize()), (int) (Math.random() * dijkstraPathfinder.getSize())));
         } while (start.getPosition().equals(end.getPosition()));
 
     }
@@ -238,6 +242,20 @@ public class Controller {
     }
 
 
+    @FXML
+    public void decrGridSize(ActionEvent actionEvent) {
+        if(gridSize > 5){
+            gridSize -= 5;
+            resetCanvas();
+        }
+    }
+
+    public void incrGridSize(ActionEvent actionEvent) {
+        if(gridSize < 50){
+            gridSize += 5;
+            resetCanvas();
+        }
+    }
 }
 
 /*

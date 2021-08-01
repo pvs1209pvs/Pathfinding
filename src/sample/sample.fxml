@@ -22,6 +22,13 @@
         <Button text="Quit" prefWidth="80" onAction="#quitButton"
                 style="-fx-background-color: #44d0cd; -fx-text-fill: #ffffff"/>
 
+        <Button text="+" prefWidth="80" onAction="#incrGridSize"
+                style="-fx-background-color: #44d0cd; -fx-text-fill: #ffffff"/>
+
+        <Button text="-" prefWidth="80" onAction="#decrGridSize"
+                style="-fx-background-color: #44d0cd; -fx-text-fill: #ffffff"/>
+
+
         <Label text="Legends"
                style="-fx-font-weight: bold; -fx-background-radius: 2;-fx-label-padding: 2; -fx-max-width: 60; -fx-alignment: center"/>
         <Label text="Start" textFill="60A561FF"

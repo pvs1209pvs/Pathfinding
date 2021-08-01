@@ -6,25 +6,33 @@ import java.util.List;
 
 public class DijkstraPathfinder {
 
-    private final int SIZE = 50;
-    private final Vertex[][] grid = new Vertex[SIZE][SIZE];
+    private int size;
+    private Vertex[][] grid;
 
-    DijkstraPathfinder() {
-        initGrid();
-    }
+    DijkstraPathfinder(int size) {
+        this.size = size;
 
-    void initGrid() {
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
+        grid = new Vertex[size][size];
+
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
                 grid[i][j] = new Vertex(i, j, Integer.MAX_VALUE);
             }
         }
+    }
+
+
+    private String pointPrinter(Point p) {
+        return "[" + p.x + "," + p.y + "] ";
     }
 
     List<Point> shortestPath(Point s, Point e) {
 
         final Queue<Vertex> q = new ArrayDeque<>();
         final Map<Point, Point> prev = new HashMap<>();
+
+        grid[s.x][s.y].type = VERTEX_TYPE.PATH;
+        grid[e.x][e.y].type = VERTEX_TYPE.PATH;
 
         grid[s.x][s.y].dist = 0;
         q.add(grid[s.x][s.y]);
@@ -35,6 +43,7 @@ public class DijkstraPathfinder {
             final List<Vertex> neighbors = getNeighbors(u);
 
             for (Vertex v : neighbors) {
+
                 v.visited = true;
                 q.add(v);
 
@@ -57,7 +66,7 @@ public class DijkstraPathfinder {
         final List<Point> shortestPath = new LinkedList<>();
 
         while (end != null) {
-            shortestPath.add(0,end);
+            shortestPath.add(0, end);
             end = prev.get(end);
         }
 
@@ -69,14 +78,14 @@ public class DijkstraPathfinder {
 
         final List<Vertex> neighbors = new ArrayList<>();
 
-        final int[] vectorC = new int[]{-1, 1, 0, 0, -1, -1, 1, 1};
-        final int[] vectorR = new int[]{0, 0, -1, 1, -1, 1, -1, 1};
+        final int[] vectorR = new int[]{-1, 0, 1, 1, 1, 0, -1, -1};
+        final int[] vectorC = new int[]{-1, -1, -1, 0, 1, 1, 1, 0};
 
         for (int i = 0; i < 8; i++) {
             int newC = u.c + vectorC[i];
             int newR = u.r + vectorR[i];
 
-            if (newC >= 0 && newC < SIZE && newR >= 0 && newR < SIZE && grid[newC][newR].type == VERTEX_TYPE.PATH && !grid[newC][newR].visited) {
+            if (newC >= 0 && newC < size && newR >= 0 && newR < size && grid[newC][newR].type == VERTEX_TYPE.PATH && !grid[newC][newR].visited) {
                 neighbors.add(grid[newC][newR]);
             }
         }
@@ -93,9 +102,12 @@ public class DijkstraPathfinder {
         return this.grid[x][y];
     }
 
+    public int getSize(){
+        return this.size;
+    }
+
     enum VERTEX_TYPE {
-        WALL,
-        PATH
+        WALL, PATH
     }
 
     static class Vertex {
@@ -120,7 +132,7 @@ public class DijkstraPathfinder {
 
         @Override
         public String toString() {
-            return "[" + c + " " + r + " " + dist + "]";
+            return "[" + c + " " + r + " " + dist + " " + this.type + "]";
         }
 
         public int getC() {
