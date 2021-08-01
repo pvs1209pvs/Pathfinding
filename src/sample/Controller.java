@@ -16,25 +16,23 @@ import java.util.List;
 
 public class Controller {
 
+    private static int gridSize = 50;
+    public static int LEN = 500 / gridSize;
 
-    private String keyPress = "";
+    private String keyPress;
 
-    private final Marker start = new Marker(Color.rgb(96, 165, 97));
-    private final Marker end = new Marker(Color.rgb(227, 74, 111));
+    private Marker start;
+    private Marker end;
 
-    private static int gridSize = 5;
-    private DijkstraPathfinder dijkstraPathfinder = new DijkstraPathfinder(gridSize);
-    private List<Point> path = new ArrayList<>();
+    private DijkstraPathfinder dijkstraPathfinder;
+    private List<Point> path;
 
-    private boolean pathFound = false;
+    private boolean pathFound;
 
     private GraphicsContext graphicsContext2D;
 
     @FXML
     private Canvas mainCanvas;
-
-    public static int LEN = 500/gridSize;
-
 
     @FXML
     public void initialize() {
@@ -46,45 +44,30 @@ public class Controller {
 
     private void resetCanvas() {
 
-        drawEmptySpots();
-        drawLines();
+        clearCanvas();
 
         keyPress = "";
 
-        start.unSet();
-        end.unSet();
+        start = new Marker(Color.rgb(96, 165, 97));
+        end = new Marker(Color.rgb(227, 74, 111));
 
         dijkstraPathfinder = new DijkstraPathfinder(gridSize);
         pathFound = false;
-        path.clear();
+        path = new ArrayList<>();
 
     }
 
-    private void drawEmptySpots() {
+    private void clearCanvas() {
         graphicsContext2D.setFill(Color.WHITE);
         graphicsContext2D.fillRect(0, 0, mainCanvas.getWidth(), mainCanvas.getHeight());
     }
 
-    private void drawLines() {
-
-        graphicsContext2D.setLineWidth(0.1);
-        graphicsContext2D.setFill(Color.GRAY);
-
-        for (int i = 0; i < mainCanvas.getHeight(); i += LEN) {
-            graphicsContext2D.strokeLine(0, i, mainCanvas.getWidth(), i);
-            graphicsContext2D.strokeLine(i, 0, i, mainCanvas.getHeight());
-        }
-
-        graphicsContext2D.setFill(Color.BLACK);
-
-    }
 
     private Point mousePosOnCanvas(MouseEvent mouseEvent) {
 
         Point mousePos = new Point((int) (mouseEvent.getSceneX() - 100), (int) (mouseEvent.getSceneY() - 0));
         mousePos.x = ((mousePos.x + (LEN - (mousePos.x % LEN))) - LEN) / LEN;
         mousePos.y = ((mousePos.y + (LEN - (mousePos.y % LEN))) - LEN) / LEN;
-        System.out.println(mousePos);
         return mousePos;
 
     }
@@ -244,15 +227,17 @@ public class Controller {
 
     @FXML
     public void decrGridSize(ActionEvent actionEvent) {
-        if(gridSize > 5){
+        if (gridSize > 5) {
             gridSize -= 5;
+            LEN = 500 / gridSize;
             resetCanvas();
         }
     }
 
     public void incrGridSize(ActionEvent actionEvent) {
-        if(gridSize < 50){
+        if (gridSize < 50) {
             gridSize += 5;
+            LEN = 500 / gridSize;
             resetCanvas();
         }
     }

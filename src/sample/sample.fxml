@@ -6,13 +6,13 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 
+<?import javafx.geometry.Insets?>
 <HBox fx:controller="sample.Controller" xmlns:fx="http://javafx.com/fxml" alignment="center">
 
     <VBox prefWidth="130" alignment="CENTER" spacing="10">
 
         <Button text="Start" prefWidth="80" onAction="#startButton"
                 style="-fx-background-color: #44d0cd; -fx-text-fill: #ffffff"/>
-
 
         <Button text="Randoom" prefWidth="80" onAction="#genRandom"
                 style="-fx-background-color: #44d0cd; -fx-text-fill: #ffffff"/>
@@ -22,11 +22,16 @@
         <Button text="Quit" prefWidth="80" onAction="#quitButton"
                 style="-fx-background-color: #44d0cd; -fx-text-fill: #ffffff"/>
 
-        <Button text="+" prefWidth="80" onAction="#incrGridSize"
-                style="-fx-background-color: #44d0cd; -fx-text-fill: #ffffff"/>
+        <HBox spacing="5" alignment="CENTER">
 
-        <Button text="-" prefWidth="80" onAction="#decrGridSize"
-                style="-fx-background-color: #44d0cd; -fx-text-fill: #ffffff"/>
+            <Button text="+" prefWidth="80" onAction="#incrGridSize"
+                    style="-fx-background-color: #44d0cd; -fx-text-fill: #ffffff"/>
+
+            <Button text="-" prefWidth="80" onAction="#decrGridSize"
+                    style="-fx-background-color: #44d0cd; -fx-text-fill: #ffffff"/>
+        </HBox>
+
+
 
 
         <Label text="Legends"
