@@ -314,6 +314,14 @@ public class Controller {
             len = 500 / gridSize;
             resetCanvas();
         }
+        else{
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText(null);
+            alert.setGraphic(null);
+            alert.setContentText("Grid size cannot recede 5 units ");
+            alert.showAndWait();
+
+        }
     }
 
     /**
@@ -325,6 +333,13 @@ public class Controller {
             gridSize += 5;
             len = 500 / gridSize;
             resetCanvas();
+        }
+        else{
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText(null);
+            alert.setGraphic(null);
+            alert.setContentText("Grid size cannot exceed 5 units ");
+            alert.showAndWait();
         }
     }
 
