@@ -17,7 +17,7 @@ import java.util.List;
 public class Controller {
 
     private static int gridSize = 50;
-    public static int LEN = 500 / gridSize;
+    public static int len = 500 / gridSize;
 
     private String keyPress;
 
@@ -45,6 +45,7 @@ public class Controller {
     private void resetCanvas() {
 
         clearCanvas();
+        drawLines();
 
         keyPress = "";
 
@@ -62,12 +63,24 @@ public class Controller {
         graphicsContext2D.fillRect(0, 0, mainCanvas.getWidth(), mainCanvas.getHeight());
     }
 
+    private void drawLines(){
+        
+        graphicsContext2D.setFill(Color.BLACK);
+        graphicsContext2D.setLineWidth(0.15);
+
+        for (int i = 0; i < 500; i+=len) {
+            graphicsContext2D.strokeLine(0, i, 500, i);
+            graphicsContext2D.strokeLine(i, 0, i, 500);
+        }
+
+    }
+
 
     private Point mousePosOnCanvas(MouseEvent mouseEvent) {
 
         Point mousePos = new Point((int) (mouseEvent.getSceneX() - 100), (int) (mouseEvent.getSceneY() - 0));
-        mousePos.x = ((mousePos.x + (LEN - (mousePos.x % LEN))) - LEN) / LEN;
-        mousePos.y = ((mousePos.y + (LEN - (mousePos.y % LEN))) - LEN) / LEN;
+        mousePos.x = ((mousePos.x + (len - (mousePos.x % len))) - len) / len;
+        mousePos.y = ((mousePos.y + (len - (mousePos.y % len))) - len) / len;
         return mousePos;
 
     }
@@ -85,7 +98,7 @@ public class Controller {
         }
 
         graphicsContext2D.setFill(Color.BLACK);
-        graphicsContext2D.fillRect(mousePos.x * LEN, mousePos.y * LEN, LEN, LEN);
+        graphicsContext2D.fillRect(mousePos.x * len, mousePos.y * len, len, len);
 
         DijkstraPathfinder.Vertex updatedVertex = dijkstraPathfinder.getVertex(mousePos.x, mousePos.y);
         updatedVertex.setType(DijkstraPathfinder.VERTEX_TYPE.WALL);
@@ -107,7 +120,7 @@ public class Controller {
         if (!marker.isSet()) {
             marker.setPosition(pos);
             graphicsContext2D.setFill(marker.getColor());
-            graphicsContext2D.fillRect(marker.getPosition().x * LEN, marker.getPosition().y * LEN, LEN, LEN);
+            graphicsContext2D.fillRect(marker.getPosition().x * len, marker.getPosition().y * len, len, len);
         }
 
     }
@@ -181,8 +194,8 @@ public class Controller {
 
     private void genRandomWalls(double wallDensity) {
 
-        for (int i = 0; i < mainCanvas.getHeight() / LEN; i++) {
-            for (int j = 0; j < mainCanvas.getWidth() / LEN; j++) {
+        for (int i = 0; i < mainCanvas.getHeight() / len; i++) {
+            for (int j = 0; j < mainCanvas.getWidth() / len; j++) {
                 if (Math.random() < wallDensity) {
                     addWall(new Point((int) (Math.random() * dijkstraPathfinder.getSize()), (int) (Math.random() * dijkstraPathfinder.getSize())));
                 }
@@ -203,7 +216,7 @@ public class Controller {
     }
 
     @FXML
-    public void genRandom(ActionEvent actionEvent) {
+    private void genRandom(ActionEvent actionEvent) {
         resetCanvas();
         genRandomWalls(0.6);
         genRandomStartEnd();
@@ -229,7 +242,7 @@ public class Controller {
     public void decrGridSize(ActionEvent actionEvent) {
         if (gridSize > 5) {
             gridSize -= 5;
-            LEN = 500 / gridSize;
+            len = 500 / gridSize;
             resetCanvas();
         }
     }
@@ -237,7 +250,7 @@ public class Controller {
     public void incrGridSize(ActionEvent actionEvent) {
         if (gridSize < 50) {
             gridSize += 5;
-            LEN = 500 / gridSize;
+            len = 500 / gridSize;
             resetCanvas();
         }
     }

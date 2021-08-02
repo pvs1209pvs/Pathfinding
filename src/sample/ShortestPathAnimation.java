@@ -2,14 +2,13 @@ package sample;
 
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.effect.Light;
 import javafx.scene.paint.Color;
 
 import java.awt.*;
 import java.util.Iterator;
 import java.util.List;
 
-import static sample.Controller.LEN;
+import static sample.Controller.len;
 
 public class ShortestPathAnimation extends AnimationTimer {
 
@@ -33,7 +32,7 @@ public class ShortestPathAnimation extends AnimationTimer {
                 graphicsContext.setFill(Color.rgb(78, 165, 210));
                 graphicsContext.setStroke(Color.GRAY);
                 graphicsContext.setLineWidth(0.1);
-                graphicsContext.fillRect(v.x * LEN, v.y * LEN, LEN, LEN);
+                graphicsContext.fillRect(v.x * len, v.y * len, len, len);
             }
 
         }
