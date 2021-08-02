@@ -6,11 +6,9 @@ import java.util.List;
 
 public class DijkstraPathfinder {
 
-    private int size;
-    private Vertex[][] grid;
+    private final Vertex[][] grid;
 
     DijkstraPathfinder(int size) {
-        this.size = size;
 
         grid = new Vertex[size][size];
 
@@ -19,11 +17,6 @@ public class DijkstraPathfinder {
                 grid[i][j] = new Vertex(i, j, Integer.MAX_VALUE);
             }
         }
-    }
-
-
-    private String pointPrinter(Point p) {
-        return "[" + p.x + "," + p.y + "] ";
     }
 
     List<Point> shortestPath(Point s, Point e) {
@@ -85,7 +78,7 @@ public class DijkstraPathfinder {
             int newC = u.c + vectorC[i];
             int newR = u.r + vectorR[i];
 
-            if (newC >= 0 && newC < size && newR >= 0 && newR < size && grid[newC][newR].type == VERTEX_TYPE.PATH && !grid[newC][newR].visited) {
+            if (newC >= 0 && newC < grid.length && newR >= 0 && newR < grid.length && grid[newC][newR].type == VERTEX_TYPE.PATH && !grid[newC][newR].visited) {
                 neighbors.add(grid[newC][newR]);
             }
         }
@@ -103,7 +96,7 @@ public class DijkstraPathfinder {
     }
 
     public int getSize(){
-        return this.size;
+        return this.grid.length;
     }
 
     enum VERTEX_TYPE {

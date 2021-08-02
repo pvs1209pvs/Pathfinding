@@ -26,7 +26,6 @@ public class Controller {
 
     private DijkstraPathfinder dijkstraPathfinder;
     private List<Point> path;
-
     private boolean pathFound;
 
     private GraphicsContext graphicsContext2D;
@@ -42,6 +41,9 @@ public class Controller {
         resetCanvas();
     }
 
+    /**
+     * Resets the whole canvas.
+     */
     private void resetCanvas() {
 
         clearCanvas();
@@ -53,16 +55,22 @@ public class Controller {
         end = new Marker(Color.rgb(227, 74, 111));
 
         dijkstraPathfinder = new DijkstraPathfinder(gridSize);
-        pathFound = false;
         path = new ArrayList<>();
+        pathFound = false;
 
     }
 
+    /**
+     * Covers canvas with white color.
+     */
     private void clearCanvas() {
         graphicsContext2D.setFill(Color.WHITE);
         graphicsContext2D.fillRect(0, 0, mainCanvas.getWidth(), mainCanvas.getHeight());
     }
 
+    /**
+     * Draws horizontal and vertical lines on the canvas.
+     */
     private void drawLines(){
         
         graphicsContext2D.setFill(Color.BLACK);
@@ -76,6 +84,11 @@ public class Controller {
     }
 
 
+    /**
+     * Mouse position on the canvas rounded off to the nearest len value.
+     * @param mouseEvent Mouse event.
+     * @return Position of the mouse on canvas.
+     */
     private Point mousePosOnCanvas(MouseEvent mouseEvent) {
 
         Point mousePos = new Point((int) (mouseEvent.getSceneX() - 100), (int) (mouseEvent.getSceneY() - 0));
@@ -85,17 +98,28 @@ public class Controller {
 
     }
 
+    /**
+     * Adds wall to the grid from user mouse event.
+     * @param mouseEvent Mouse event.
+     */
     @FXML
     private void addWall(MouseEvent mouseEvent) {
-        addWall(mousePosOnCanvas(mouseEvent));
-    }
 
-    private void addWall(Point mousePos) {
+        Point mousePos = mousePosOnCanvas(mouseEvent);
 
         // handles mouse going outside the canvas
-        if (mousePos.x < 0.0 || mousePos.x >= mainCanvas.getHeight() || mousePos.y < 0 || mousePos.y >= mainCanvas.getWidth()) {
-            return;
+        if(mousePos.x < gridSize && mousePos.x >= 0 && mousePos.y < gridSize && mousePos.y >= 0){
+            addWall(mousePos);
         }
+
+    }
+
+    /**
+     * Adds wall to the grid.
+     * Called via user mouse event and random generator.
+     * @param mousePos Position of the mouse where the wall needs to be added.
+     */
+    private void addWall(Point mousePos) {
 
         graphicsContext2D.setFill(Color.BLACK);
         graphicsContext2D.fillRect(mousePos.x * len, mousePos.y * len, len, len);
@@ -104,15 +128,23 @@ public class Controller {
         updatedVertex.setType(DijkstraPathfinder.VERTEX_TYPE.WALL);
         dijkstraPathfinder.setVertex(mousePos.x, mousePos.y, updatedVertex);
 
+        // replaces start with wall
         if (start.getPosition().x == mousePos.x && start.getPosition().y == mousePos.y) {
             start.unSet();
         }
 
+        // replaces end with wall
         if (end.getPosition().x == mousePos.x && end.getPosition().y == mousePos.y) {
             end.unSet();
         }
+
     }
 
+    /**
+     * Sets the marker on the grid.
+     * @param marker Type of the marker that needs to be placed.
+     * @param pos Position where the marker needs to be placed.
+     */
     private void setMarker(Marker marker, Point pos) {
 
         graphicsContext2D.setEffect(new Glow(0.9));
@@ -125,6 +157,10 @@ public class Controller {
 
     }
 
+    /**
+     * Adds start or/and finish marker.
+     * @param mouseEvent Mouse event.
+     */
     @FXML
     private void addStartFinish(MouseEvent mouseEvent) {
 
@@ -137,6 +173,10 @@ public class Controller {
 
     }
 
+    /**
+     * Returns the marker that isn't set.
+     * @return Empty string if both the markers are set. "s" if start is missing. "e" if end is missing.
+     */
     private String isStartFinishSet() {
 
         if (!start.isSet()) {
@@ -152,6 +192,10 @@ public class Controller {
     }
 
 
+    /**
+     * Stats the pathfinding animation.
+     * @param actionEvent Action event.
+     */
     @FXML
     private void startButton(ActionEvent actionEvent) {
 
@@ -192,11 +236,14 @@ public class Controller {
 
     }
 
-    private void genRandomWalls(double wallDensity) {
+    /**
+     * Adds random walls on the grid.
+     */
+    private void genRandomWalls() {
 
         for (int i = 0; i < mainCanvas.getHeight() / len; i++) {
             for (int j = 0; j < mainCanvas.getWidth() / len; j++) {
-                if (Math.random() < wallDensity) {
+                if (Math.random() < 0.6) {
                     addWall(new Point((int) (Math.random() * dijkstraPathfinder.getSize()), (int) (Math.random() * dijkstraPathfinder.getSize())));
                 }
             }
@@ -205,6 +252,9 @@ public class Controller {
 
     }
 
+    /**
+     * Places start and finish marker randomly on the grid.
+     */
     private void genRandomStartEnd() {
 
         setMarker(start, new Point((int) (Math.random() * dijkstraPathfinder.getSize()), (int) (Math.random() * dijkstraPathfinder.getSize())));
@@ -215,29 +265,48 @@ public class Controller {
 
     }
 
+    /**
+     * Generate random map.
+     * @param actionEvent Action event.
+     */
     @FXML
     private void genRandom(ActionEvent actionEvent) {
         resetCanvas();
-        genRandomWalls(0.6);
+        genRandomWalls();
         genRandomStartEnd();
     }
 
+    /**
+     * Used to place start and finish marker on the canvas.
+     * Hold 's' to place start and 'e' to place end.
+     * @param keyEvent Key press.
+     */
     @FXML
     private void option(KeyEvent keyEvent) {
         keyPress = keyEvent.getText().toLowerCase();
     }
 
+    /**
+     * Clear the whole canvas
+     */
     @FXML
     private void clearButton() {
-        initialize();
+        resetCanvas();
     }
 
+    /**
+     * Closes the program.
+     */
     @FXML
     private void quitButton() {
         System.exit(0);
     }
 
 
+    /**
+     * Decreases the size of the grid by 5 units.
+     * @param actionEvent Action event.
+     */
     @FXML
     public void decrGridSize(ActionEvent actionEvent) {
         if (gridSize > 5) {
@@ -247,6 +316,10 @@ public class Controller {
         }
     }
 
+    /**
+     * Increases the size of the grid by 5 units.
+     * @param actionEvent Action event.
+     */
     public void incrGridSize(ActionEvent actionEvent) {
         if (gridSize < 50) {
             gridSize += 5;
@@ -254,8 +327,5 @@ public class Controller {
             resetCanvas();
         }
     }
-}
 
-/*
-  TODO Can you place wall on start/end?
- */
+}
