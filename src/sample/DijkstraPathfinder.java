@@ -71,8 +71,8 @@ public class DijkstraPathfinder {
 
         final List<Vertex> neighbors = new ArrayList<>();
 
-        final int[] vectorR = new int[]{-1, 0, 1, 1, 1, 0, -1, -1};
-        final int[] vectorC = new int[]{-1, -1, -1, 0, 1, 1, 1, 0};
+        final int[] vectorR = new int[]{-1, 0, 1, 1, -1, 0, -1, 1};
+        final int[] vectorC = new int[]{-1, -1, -1, 0, 0, 1, 1, 1};
 
         for (int i = 0; i < 8; i++) {
             int newC = u.c + vectorC[i];
