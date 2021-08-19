@@ -126,7 +126,7 @@ public class Controller {
 
         DijkstraPathfinder.Vertex updatedVertex = dijkstraPathfinder.getVertex(mousePos.x, mousePos.y);
         updatedVertex.setType(DijkstraPathfinder.VERTEX_TYPE.WALL);
-        dijkstraPathfinder.setVertex(mousePos.x, mousePos.y, updatedVertex);
+        dijkstraPathfinder.setVertex( updatedVertex);
 
         // replaces start with wall
         if (start.getPosition().x == mousePos.x && start.getPosition().y == mousePos.y) {

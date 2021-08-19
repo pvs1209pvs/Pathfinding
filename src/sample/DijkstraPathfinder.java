@@ -14,7 +14,7 @@ public class DijkstraPathfinder {
 
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                grid[i][j] = new Vertex(i, j, Integer.MAX_VALUE);
+                setVertex(new Vertex(i, j));
             }
         }
     }
@@ -87,8 +87,8 @@ public class DijkstraPathfinder {
 
     }
 
-    public void setVertex(int x, int y, Vertex v) {
-        this.grid[x][y] = v;
+    public void setVertex(Vertex v) {
+        this.grid[v.c][v.r] = v;
     }
 
     public Vertex getVertex(int x, int y) {
@@ -111,10 +111,10 @@ public class DijkstraPathfinder {
         private boolean visited;
         private VERTEX_TYPE type;
 
-        Vertex(int c, int r, int dist) {
+        Vertex(int c, int r) {
             this.c = c;
             this.r = r;
-            this.dist = dist;
+            this.dist = Integer.MAX_VALUE;
             this.visited = false;
             this.type = VERTEX_TYPE.PATH;
         }
