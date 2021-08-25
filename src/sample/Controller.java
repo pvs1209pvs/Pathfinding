@@ -128,8 +128,6 @@ public class Controller {
         graphicsContext2D.fillRect(mousePos.x * len, mousePos.y * len, len, len);
 
        dijkstraPathfinder.getVertex(mousePos.x, mousePos.y).setType(DijkstraPathfinder.VERTEX_TYPE.WALL);
-//        updatedVertex.setType(DijkstraPathfinder.VERTEX_TYPE.WALL);
-//        dijkstraPathfinder.setVertex(updatedVertex);
 
         // replaces start with wall
         if (start.getPosition().x == mousePos.x && start.getPosition().y == mousePos.y) {
@@ -250,7 +248,7 @@ public class Controller {
 
         for (int i = 0; i < mainCanvas.getHeight() / len; i++) {
             for (int j = 0; j < mainCanvas.getWidth() / len; j++) {
-                if (Math.random() < 0.6) {
+                if (Math.random() < 0.3) {
                     addWall(new Point((int) (Math.random() * dijkstraPathfinder.getSize()), (int) (Math.random() * dijkstraPathfinder.getSize())));
                 }
             }
