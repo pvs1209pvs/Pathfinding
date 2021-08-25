@@ -21,8 +21,8 @@ public class Controller {
 
     private String keyPress;
 
-    private Marker start ;
-    private Marker end;
+    private Marker start = new Marker(Color.rgb(96, 165, 97));
+    private Marker end = new Marker(Color.rgb(227, 74, 111));
 
     private DijkstraPathfinder dijkstraPathfinder;
     private boolean pathFound;
@@ -50,8 +50,8 @@ public class Controller {
 
         keyPress = "";
 
-        start = new Marker(Color.rgb(96, 165, 97));
-        end = new Marker(Color.rgb(227, 74, 111));
+        start.unSet();
+        end.unSet();
 
         dijkstraPathfinder = null;
         pathFound = false;
