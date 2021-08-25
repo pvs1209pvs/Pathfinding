@@ -72,14 +72,11 @@ public class DijkstraPathfinder {
     private List<Vertex> getNeighbors(Vertex u) {
 
         final List<Vertex> neighbors = new ArrayList<>();
+        final List<Point> explorationDir = List.of(new Point(-1,0), new Point(1,0), new Point(0,-1), new Point(0,1));
 
-
-        final int[] vectorC = new int[]{-1, 1, 0, 0};
-        final int[] vectorR = new int[]{0, 0, -1, 1};
-
-        for (int i = 0; i < 4; i++) {
-            int newC = u.c + vectorC[i];
-            int newR = u.r + vectorR[i];
+        for (Point dir : explorationDir) {
+            int newC = u.c + dir.x;
+            int newR = u.r + dir.y;
 
             if (newC >= 0 && newC < grid.length && newR >= 0 && newR < grid.length && grid[newC][newR].type == VERTEX_TYPE.PATH && !grid[newC][newR].visited) {
                 neighbors.add(grid[newC][newR]);
@@ -126,14 +123,15 @@ public class DijkstraPathfinder {
             return new Point(c, r);
         }
 
+        public void setType(VERTEX_TYPE type) {
+            this.type = type;
+        }
+
         @Override
         public String toString() {
             return "[" + c + " " + r + " " + dist + " " + this.type + "]";
         }
 
-        public void setType(VERTEX_TYPE type) {
-            this.type = type;
-        }
 
     }
 

@@ -1,7 +1,7 @@
 package sample;
 
-import javafx.fxml.FXML;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
@@ -21,11 +21,10 @@ public class Controller {
 
     private String keyPress;
 
-    private Marker start;
+    private Marker start ;
     private Marker end;
 
     private DijkstraPathfinder dijkstraPathfinder;
-    private List<Point> path;
     private boolean pathFound;
 
     private GraphicsContext graphicsContext2D;
@@ -54,8 +53,7 @@ public class Controller {
         start = new Marker(Color.rgb(96, 165, 97));
         end = new Marker(Color.rgb(227, 74, 111));
 
-        dijkstraPathfinder = new DijkstraPathfinder(gridSize);
-        path = new ArrayList<>();
+        dijkstraPathfinder = null;
         pathFound = false;
 
     }
@@ -127,7 +125,10 @@ public class Controller {
         graphicsContext2D.setFill(Color.BLACK);
         graphicsContext2D.fillRect(mousePos.x * len, mousePos.y * len, len, len);
 
-       dijkstraPathfinder.getVertex(mousePos.x, mousePos.y).setType(DijkstraPathfinder.VERTEX_TYPE.WALL);
+        if (dijkstraPathfinder == null) {
+            dijkstraPathfinder = new DijkstraPathfinder(gridSize);
+        }
+        dijkstraPathfinder.getVertex(mousePos.x, mousePos.y).setType(DijkstraPathfinder.VERTEX_TYPE.WALL);
 
         // replaces start with wall
         if (start.getPosition().x == mousePos.x && start.getPosition().y == mousePos.y) {
@@ -195,7 +196,6 @@ public class Controller {
 
     }
 
-
     /**
      * Stats the pathfinding animation.
      *
@@ -222,7 +222,11 @@ public class Controller {
             }
         }
 
-        path = dijkstraPathfinder.shortestPath(start.getPosition(), end.getPosition());
+        if(dijkstraPathfinder==null){
+            dijkstraPathfinder = new DijkstraPathfinder(gridSize);
+        }
+
+        List<Point> path = dijkstraPathfinder.shortestPath(start.getPosition(), end.getPosition());
         path.remove(end.getPosition());
         path.remove(start.getPosition());
 
@@ -246,6 +250,10 @@ public class Controller {
      */
     private void genRandomWalls() {
 
+        if(dijkstraPathfinder==null){
+            dijkstraPathfinder = new DijkstraPathfinder(gridSize);
+        }
+
         for (int i = 0; i < mainCanvas.getHeight() / len; i++) {
             for (int j = 0; j < mainCanvas.getWidth() / len; j++) {
                 if (Math.random() < 0.3) {
@@ -261,6 +269,10 @@ public class Controller {
      * Places start and finish marker randomly on the grid.
      */
     private void genRandomStartEnd() {
+
+        if(dijkstraPathfinder==null){
+            dijkstraPathfinder = new DijkstraPathfinder(gridSize);
+        }
 
         setMarker(start, new Point((int) (Math.random() * dijkstraPathfinder.getSize()), (int) (Math.random() * dijkstraPathfinder.getSize())));
 
