@@ -71,12 +71,12 @@ public class Controller {
     /**
      * Draws horizontal and vertical lines on the canvas.
      */
-    private void drawLines(){
-        
+    private void drawLines() {
+
         graphicsContext2D.setFill(Color.BLACK);
         graphicsContext2D.setLineWidth(0.15);
 
-        for (int i = 0; i < 500; i+=len) {
+        for (int i = 0; i < 500; i += len) {
             graphicsContext2D.strokeLine(0, i, 500, i);
             graphicsContext2D.strokeLine(i, 0, i, 500);
         }
@@ -86,6 +86,7 @@ public class Controller {
 
     /**
      * Mouse position on the canvas rounded off to the nearest len value.
+     *
      * @param mouseEvent Mouse event.
      * @return Position of the mouse on canvas.
      */
@@ -100,6 +101,7 @@ public class Controller {
 
     /**
      * Adds wall to the grid from user mouse event.
+     *
      * @param mouseEvent Mouse event.
      */
     @FXML
@@ -108,7 +110,7 @@ public class Controller {
         Point mousePos = mousePosOnCanvas(mouseEvent);
 
         // handles mouse going outside the canvas
-        if(mousePos.x < gridSize && mousePos.x >= 0 && mousePos.y < gridSize && mousePos.y >= 0){
+        if (mousePos.x < gridSize && mousePos.x >= 0 && mousePos.y < gridSize && mousePos.y >= 0) {
             addWall(mousePos);
         }
 
@@ -117,6 +119,7 @@ public class Controller {
     /**
      * Adds wall to the grid.
      * Called via user mouse event and random generator.
+     *
      * @param mousePos Position of the mouse where the wall needs to be added.
      */
     private void addWall(Point mousePos) {
@@ -124,9 +127,9 @@ public class Controller {
         graphicsContext2D.setFill(Color.BLACK);
         graphicsContext2D.fillRect(mousePos.x * len, mousePos.y * len, len, len);
 
-        DijkstraPathfinder.Vertex updatedVertex = dijkstraPathfinder.getVertex(mousePos.x, mousePos.y);
-        updatedVertex.setType(DijkstraPathfinder.VERTEX_TYPE.WALL);
-        dijkstraPathfinder.setVertex( updatedVertex);
+       dijkstraPathfinder.getVertex(mousePos.x, mousePos.y).setType(DijkstraPathfinder.VERTEX_TYPE.WALL);
+//        updatedVertex.setType(DijkstraPathfinder.VERTEX_TYPE.WALL);
+//        dijkstraPathfinder.setVertex(updatedVertex);
 
         // replaces start with wall
         if (start.getPosition().x == mousePos.x && start.getPosition().y == mousePos.y) {
@@ -142,8 +145,9 @@ public class Controller {
 
     /**
      * Sets the marker on the grid.
+     *
      * @param marker Type of the marker that needs to be placed.
-     * @param pos Position where the marker needs to be placed.
+     * @param pos    Position where the marker needs to be placed.
      */
     private void setMarker(Marker marker, Point pos) {
 
@@ -159,6 +163,7 @@ public class Controller {
 
     /**
      * Adds start or/and finish marker.
+     *
      * @param mouseEvent Mouse event.
      */
     @FXML
@@ -175,6 +180,7 @@ public class Controller {
 
     /**
      * Returns the marker that isn't set.
+     *
      * @return Empty string if both the markers are set. "s" if start is missing. "e" if end is missing.
      */
     private String isStartFinishSet() {
@@ -194,6 +200,7 @@ public class Controller {
 
     /**
      * Stats the pathfinding animation.
+     *
      * @param actionEvent Action event.
      */
     @FXML
@@ -267,6 +274,7 @@ public class Controller {
 
     /**
      * Generate random map.
+     *
      * @param actionEvent Action event.
      */
     @FXML
@@ -279,6 +287,7 @@ public class Controller {
     /**
      * Used to place start and finish marker on the canvas.
      * Hold 's' to place start and 'e' to place end.
+     *
      * @param keyEvent Key press.
      */
     @FXML
@@ -305,6 +314,7 @@ public class Controller {
 
     /**
      * Decreases the size of the grid by 5 units.
+     *
      * @param actionEvent Action event.
      */
     @FXML
@@ -313,8 +323,7 @@ public class Controller {
             gridSize -= 5;
             len = 500 / gridSize;
             resetCanvas();
-        }
-        else{
+        } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText(null);
             alert.setGraphic(null);
@@ -326,6 +335,7 @@ public class Controller {
 
     /**
      * Increases the size of the grid by 5 units.
+     *
      * @param actionEvent Action event.
      */
     public void incrGridSize(ActionEvent actionEvent) {
@@ -333,8 +343,7 @@ public class Controller {
             gridSize += 5;
             len = 500 / gridSize;
             resetCanvas();
-        }
-        else{
+        } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText(null);
             alert.setGraphic(null);

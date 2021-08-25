@@ -1,8 +1,9 @@
 package sample;
 
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.Queue;
+import java.util.*;
 
 public class DijkstraPathfinder {
 
@@ -17,6 +18,7 @@ public class DijkstraPathfinder {
                 setVertex(new Vertex(i, j));
             }
         }
+
     }
 
     List<Point> shortestPath(Point s, Point e) {
@@ -95,7 +97,7 @@ public class DijkstraPathfinder {
         return this.grid[x][y];
     }
 
-    public int getSize(){
+    public int getSize() {
         return this.grid.length;
     }
 
@@ -126,14 +128,6 @@ public class DijkstraPathfinder {
         @Override
         public String toString() {
             return "[" + c + " " + r + " " + dist + " " + this.type + "]";
-        }
-
-        public int getC() {
-            return c;
-        }
-
-        public int getR() {
-            return r;
         }
 
         public void setType(VERTEX_TYPE type) {
