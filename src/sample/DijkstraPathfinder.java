@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.*;
 
-public class DijkstraPathfinder {
+public class DijkstraPathfinder implements Pathfinder {
 
     private final Vertex[][] grid;
 
@@ -21,7 +21,7 @@ public class DijkstraPathfinder {
 
     }
 
-    List<Point> shortestPath(Point s, Point e) {
+    public List<Point> shortestPath(Point s, Point e) {
 
         final Queue<Vertex> q = new ArrayDeque<>();
         final Map<Point, Point> prev = new HashMap<>();
@@ -52,11 +52,11 @@ public class DijkstraPathfinder {
 
         }
 
-        return getShortestPath(prev, grid[e.x][e.y].getPos());
+        return cameFrom(prev, grid[e.x][e.y].getPos());
 
     }
 
-    private List<Point> getShortestPath(Map<Point, Point> prev, Point end) {
+    private List<Point> cameFrom(Map<Point, Point> prev, Point end) {
 
         final List<Point> shortestPath = new LinkedList<>();
 
@@ -72,7 +72,7 @@ public class DijkstraPathfinder {
     private List<Vertex> getNeighbors(Vertex u) {
 
         final List<Vertex> neighbors = new ArrayList<>();
-        final List<Point> explorationDir = List.of(new Point(-1,0), new Point(1,0), new Point(0,-1), new Point(0,1));
+        final List<Point> explorationDir = List.of(new Point(-1, 0), new Point(1, 0), new Point(0, -1), new Point(0, 1));
 
         for (Point dir : explorationDir) {
             int newC = u.c + dir.x;

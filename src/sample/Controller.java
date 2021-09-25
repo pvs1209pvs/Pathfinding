@@ -11,7 +11,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Controller {
@@ -19,15 +18,15 @@ public class Controller {
     private static int gridSize = 50;
     public static int len = 500 / gridSize;
 
+    private GraphicsContext graphicsContext2D;
     private String keyPress;
 
-    private Marker start = new Marker(Color.rgb(96, 165, 97));
-    private Marker end = new Marker(Color.rgb(227, 74, 111));
+    private final Marker start = new Marker(Color.rgb(96, 165, 97));
+    private final Marker end = new Marker(Color.rgb(227, 74, 111));
 
     private DijkstraPathfinder dijkstraPathfinder;
     private boolean pathFound;
 
-    private GraphicsContext graphicsContext2D;
 
     @FXML
     private Canvas mainCanvas;
@@ -202,7 +201,7 @@ public class Controller {
      * @param actionEvent Action event.
      */
     @FXML
-    private void startButton(ActionEvent actionEvent) {
+    private void startDij(ActionEvent actionEvent) {
 
         Alert missingStartFinishAlert = new Alert(Alert.AlertType.ERROR);
         missingStartFinishAlert.setHeaderText(null);
@@ -222,7 +221,7 @@ public class Controller {
             }
         }
 
-        if(dijkstraPathfinder==null){
+        if (dijkstraPathfinder == null) {
             dijkstraPathfinder = new DijkstraPathfinder(gridSize);
         }
 
@@ -250,7 +249,7 @@ public class Controller {
      */
     private void genRandomWalls() {
 
-        if(dijkstraPathfinder==null){
+        if (dijkstraPathfinder == null) {
             dijkstraPathfinder = new DijkstraPathfinder(gridSize);
         }
 
@@ -270,7 +269,7 @@ public class Controller {
      */
     private void genRandomStartEnd() {
 
-        if(dijkstraPathfinder==null){
+        if (dijkstraPathfinder == null) {
             dijkstraPathfinder = new DijkstraPathfinder(gridSize);
         }
 
@@ -362,4 +361,6 @@ public class Controller {
         }
     }
 
+    public void startAStar(ActionEvent actionEvent) {
+    }
 }
