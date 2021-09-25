@@ -14,8 +14,11 @@ public class Main extends Application {
 
         HBox root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("sample.fxml")));
         primaryStage.setTitle("Pathfinding");
-        primaryStage.setScene(new Scene(root, 600, 500));
+        Scene scene = new Scene(root, 600, 500);
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("style.css")).toExternalForm());
+        primaryStage.setScene(scene);
         primaryStage.setResizable(false);
+
         primaryStage.show();
 
     }

@@ -1,1 +1,4 @@
-.style
+.button {
+    -fx-background-color: #44d0cd;
+    -fx-text-fill: #ffffff
+}

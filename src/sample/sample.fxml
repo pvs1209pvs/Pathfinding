@@ -15,27 +15,17 @@
             <Insets topRightBottomLeft="10"/>
         </padding>
 
-        <Button text="Dij" prefWidth="80" onAction="#startDij"
-                style="-fx-background-color: #44d0cd; -fx-text-fill: #ffffff"/>
+        <Button text="Dij" prefWidth="80" onAction="#startDij"/>
 
-        <Button text="AStar" prefWidth="80" onAction="#startAStar"
-                style="-fx-background-color: #44d0cd; -fx-text-fill: #ffffff"/>
-        <Button text="Random" prefWidth="80" onAction="#genRandom"
-                style="-fx-background-color: #44d0cd; -fx-text-fill: #ffffff"/>
+        <Button text="AStar" prefWidth="80" onAction="#startAStar"/>
+        <Button text="Random" prefWidth="80" onAction="#genRandom"/>
+        <Button text="Clear" prefWidth="80" onAction="#clearButton"/>
 
-        <Button text="Clear" prefWidth="80" onAction="#clearButton"
-                style="-fx-background-color: #44d0cd; -fx-text-fill: #ffffff"/>
-
-        <Button text="Quit" prefWidth="80" onAction="#quitButton"
-                style="-fx-background-color: #44d0cd; -fx-text-fill: #ffffff"/>
+        <Button text="Quit" prefWidth="80" onAction="#quitButton"/>
 
         <HBox spacing="5" alignment="CENTER">
-
-            <Button text="+" prefWidth="80" onAction="#incrGridSize"
-                    style="-fx-background-color: #44d0cd; -fx-text-fill: #ffffff"/>
-
-            <Button text="-" prefWidth="80" onAction="#decrGridSize"
-                    style="-fx-background-color: #44d0cd; -fx-text-fill: #ffffff"/>
+            <Button text="+" prefWidth="80" onAction="#incrGridSize"/>
+            <Button text="-" prefWidth="80" onAction="#decrGridSize"/>
         </HBox>
 
         <Label text="How To" maxWidth="80"
