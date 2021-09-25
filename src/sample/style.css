@@ -2,3 +2,27 @@
     -fx-background-color: #44d0cd;
     -fx-text-fill: #ffffff
 }
+
+.label {
+    -fx-font-weight: bold;
+    -fx-background-radius: 2;
+    -fx-label-padding: 2;
+    -fx-max-width: 60;
+    -fx-alignment: center
+}
+
+.text-flow{
+    -fx-alignment: center;
+}
+
+#wallText{
+    -fx-stroke: #564e4e;
+}
+
+#startingPointText{
+    -fx-stroke: #60a561;
+}
+
+#finishingPointText{
+    -fx-stroke: #e34a70;
+}

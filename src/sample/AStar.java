@@ -18,7 +18,6 @@ public class AStar{
             }
         }
 
-
     }
 
     public List<Point> shortestPath(Point s, Point e) {
@@ -80,8 +79,9 @@ public class AStar{
         final List<Point> explorationDir = List.of(
                 new Point(-1, 0),
                 new Point(1, 0),
-                new Point(1, -1),
+                new Point(0, -1),
                 new Point(0, 1));
+
 
         for (Point dir : explorationDir) {
             int newX = current.pos.x + dir.x;
@@ -105,14 +105,12 @@ public class AStar{
         return grid[x][y];
     }
 
-
     static class Vertex implements Comparable<Vertex> {
 
         private final Point pos;
         private VertexType type;
         private double g;
         private double f;
-
 
         Vertex(Point pos) {
             this.pos = pos;

@@ -27,10 +27,9 @@ public class Controller {
 
     private DijkstraPathfinder dijkstraPathfinder;
     private AStar aStar;
-    private boolean pathFound;
 
     List<Point> walls = new ArrayList<>();
-
+    private boolean pathFound;
 
     @FXML
     private Canvas mainCanvas;
@@ -237,6 +236,9 @@ public class Controller {
         path.remove(start.getPosition());
 
         pathValidityMsg(path);
+
+        System.out.println("dij " + pathFound);
+
     }
 
 
@@ -264,6 +266,7 @@ public class Controller {
         path.remove(start.getPosition());
 
         pathValidityMsg(path);
+        System.out.println("dij " + pathFound);
 
     }
 

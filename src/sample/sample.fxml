@@ -8,6 +8,7 @@
 
 <?import javafx.geometry.Insets?>
 
+<?import javafx.scene.layout.Pane?>
 <HBox fx:controller="sample.Controller" xmlns:fx="http://javafx.com/fxml" alignment="center">
 
     <VBox prefWidth="130" alignment="CENTER" spacing="10">
@@ -28,15 +29,14 @@
             <Button text="-" prefWidth="80" onAction="#decrGridSize"/>
         </HBox>
 
-        <Label text="How To" maxWidth="80"
-               style="-fx-font-weight: bold; -fx-background-radius: 2;-fx-label-padding: 2; -fx-max-width: 60; -fx-alignment: center"/>
-        <TextFlow style="-fx-alignment: center">
+        <Label text="How To" maxWidth="80"/>
+        <TextFlow>
             <Text text="Drag mouse to add "/>
-            <Text text="Walls " style="-fx-stroke: #564e4e"/>
+            <Text fx:id="wallText" text="Walls "/>
             <Text text="Hold S + Left Mouse to add "/>
-            <Text text="Starting Point " style="-fx-stroke: #60a561"/>
+            <Text fx:id="startingPointText" text="Starting Point "/>
             <Text text="Hold  E+ Left Mouse to add "/>
-            <Text text="Finishing Point " style="-fx-stroke: #e34a70"/>
+            <Text fx:id="finishingPointText" text="Finishing Point "/>
         </TextFlow>
 
     </VBox>
