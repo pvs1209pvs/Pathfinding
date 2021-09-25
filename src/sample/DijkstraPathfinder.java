@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.*;
 
-public class DijkstraPathfinder implements Pathfinder {
+public class DijkstraPathfinder {
 
     private final Vertex[][] grid;
 
@@ -15,7 +15,7 @@ public class DijkstraPathfinder implements Pathfinder {
 
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                setVertex(new Vertex(i, j));
+                setVertex(new Vertex(new Point(i, j)));
             }
         }
 
@@ -26,8 +26,8 @@ public class DijkstraPathfinder implements Pathfinder {
         final Queue<Vertex> q = new ArrayDeque<>();
         final Map<Point, Point> prev = new HashMap<>();
 
-        grid[s.x][s.y].type = VERTEX_TYPE.PATH;
-        grid[e.x][e.y].type = VERTEX_TYPE.PATH;
+        grid[s.x][s.y].type = VertexType.PATH;
+        grid[e.x][e.y].type = VertexType.PATH;
 
         grid[s.x][s.y].dist = 0;
         q.add(grid[s.x][s.y]);
@@ -36,6 +36,7 @@ public class DijkstraPathfinder implements Pathfinder {
 
             final Vertex u = q.remove();
             final List<Vertex> neighbors = getNeighbors(u);
+            neighbors.removeIf(cond -> cond.visited);
 
             for (Vertex v : neighbors) {
 
@@ -45,14 +46,14 @@ public class DijkstraPathfinder implements Pathfinder {
                 int altDist = u.dist + 1;
                 if (altDist < v.dist) {
                     v.dist = altDist;
-                    prev.put(v.getPos(), u.getPos());
+                    prev.put(v.pos, u.pos);
                 }
 
             }
 
         }
 
-        return cameFrom(prev, grid[e.x][e.y].getPos());
+        return cameFrom(prev, grid[e.x][e.y].pos);
 
     }
 
@@ -69,17 +70,22 @@ public class DijkstraPathfinder implements Pathfinder {
 
     }
 
-    private List<Vertex> getNeighbors(Vertex u) {
+    private List<Vertex> getNeighbors(Vertex current) {
 
         final List<Vertex> neighbors = new ArrayList<>();
-        final List<Point> explorationDir = List.of(new Point(-1, 0), new Point(1, 0), new Point(0, -1), new Point(0, 1));
+        final List<Point> explorationDir = List.of(
+                new Point(-1, 0),
+                new Point(1, 0),
+                new Point(0, -1),
+                new Point(0, 1));
+
 
         for (Point dir : explorationDir) {
-            int newC = u.c + dir.x;
-            int newR = u.r + dir.y;
-
-            if (newC >= 0 && newC < grid.length && newR >= 0 && newR < grid.length && grid[newC][newR].type == VERTEX_TYPE.PATH && !grid[newC][newR].visited) {
-                neighbors.add(grid[newC][newR]);
+            int newX = current.pos.x + dir.x;
+            int newY = current.pos.y + dir.y;
+//            !grid[newC][newR].visited
+            if (newX >= 0 && newX < grid.length && newY >= 0 && newY < grid.length && grid[newX][newY].type == VertexType.PATH) {
+                neighbors.add(grid[newX][newY]);
             }
         }
 
@@ -88,7 +94,7 @@ public class DijkstraPathfinder implements Pathfinder {
     }
 
     public void setVertex(Vertex v) {
-        this.grid[v.c][v.r] = v;
+        this.grid[v.pos.x][v.pos.y] = v;
     }
 
     public Vertex getVertex(int x, int y) {
@@ -99,37 +105,31 @@ public class DijkstraPathfinder implements Pathfinder {
         return this.grid.length;
     }
 
-    enum VERTEX_TYPE {
+    enum VertexType {
         WALL, PATH
     }
 
     static class Vertex {
 
-        private final int c;
-        private final int r;
+        private final Point pos;
+        private VertexType type;
         private int dist;
         private boolean visited;
-        private VERTEX_TYPE type;
 
-        Vertex(int c, int r) {
-            this.c = c;
-            this.r = r;
+        Vertex(Point pos) {
+            this.pos = pos;
             this.dist = Integer.MAX_VALUE;
             this.visited = false;
-            this.type = VERTEX_TYPE.PATH;
+            this.type = VertexType.PATH;
         }
 
-        public Point getPos() {
-            return new Point(c, r);
-        }
-
-        public void setType(VERTEX_TYPE type) {
+        public void setType(VertexType type) {
             this.type = type;
         }
 
         @Override
         public String toString() {
-            return "[" + c + " " + r + " " + dist + " " + this.type + "]";
+            return "[" + pos + " " + dist + " " + this.type + "]";
         }
 
 

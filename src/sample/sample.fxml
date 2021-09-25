@@ -7,9 +7,13 @@
 <?import javafx.scene.text.TextFlow?>
 
 <?import javafx.geometry.Insets?>
+
 <HBox fx:controller="sample.Controller" xmlns:fx="http://javafx.com/fxml" alignment="center">
 
     <VBox prefWidth="130" alignment="CENTER" spacing="10">
+        <padding>
+            <Insets topRightBottomLeft="10"/>
+        </padding>
 
         <Button text="Dij" prefWidth="80" onAction="#startDij"
                 style="-fx-background-color: #44d0cd; -fx-text-fill: #ffffff"/>
@@ -33,17 +37,6 @@
             <Button text="-" prefWidth="80" onAction="#decrGridSize"
                     style="-fx-background-color: #44d0cd; -fx-text-fill: #ffffff"/>
         </HBox>
-
-        <Label text="Legends"
-               style="-fx-font-weight: bold; -fx-background-radius: 2;-fx-label-padding: 2; -fx-max-width: 80; -fx-alignment: center"/>
-        <Label text="Start" textFill="60A561FF"
-               style="-fx-background-radius: 2;-fx-label-padding: 2; -fx-max-width: 60; -fx-alignment: center;"/>
-        <Label text="Finish" textFill="E34A6FFF"
-               style="-fx-background-radius: 2; -fx-label-padding: 2; -fx-max-width: 60; -fx-alignment: center"/>
-        <Label text="Wall" textFill="#000000"
-               style="-fx-background-radius: 2;  -fx-label-padding: 2; -fx-max-width: 60; -fx-alignment: center"/>
-        <Label text="Path" textFill="4EA5D2FF"
-               style="-fx-background-radius: 2;  -fx-label-padding: 2; -fx-max-width: 60; -fx-alignment: center"/>
 
         <Label text="How To" maxWidth="80"
                style="-fx-font-weight: bold; -fx-background-radius: 2;-fx-label-padding: 2; -fx-max-width: 60; -fx-alignment: center"/>

@@ -4,7 +4,7 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-public class AStar implements Pathfinder {
+public class AStar{
 
     private final Vertex[][] grid;
 
@@ -14,18 +14,10 @@ public class AStar implements Pathfinder {
 
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid.length; j++) {
-                System.out.print(i + "," + j + "  ");
                 grid[i][j] = new Vertex(new Point(i, j));
             }
-            System.out.println();
         }
 
-        grid[1][1].setType(VertexType.WALL);
-        grid[1][2].setType(VertexType.WALL);
-        grid[2][1].setType(VertexType.WALL);
-        grid[3][3].setType(VertexType.WALL);
-        grid[4][3].setType(VertexType.WALL);
-        grid[0][2].setType(VertexType.WALL);
 
     }
 
@@ -41,19 +33,13 @@ public class AStar implements Pathfinder {
 
         while (!openSet.isEmpty()) {
 
-//            System.out.println("openset " + openSet);
-
             Vertex current = openSet.poll();
-//            System.out.println("current " + current);
 
             if (current.pos == e) {
-//                System.out.println("path found");
                 return null;
             }
 
-
             List<Vertex> neighbors = getNeighbors(current);
-//            System.out.println("neighbors " + neighbors);
 
             for (Vertex neighbor : neighbors) {
 
@@ -66,18 +52,16 @@ public class AStar implements Pathfinder {
                     if (!openSet.contains(neighbor)) {
                         openSet.add(neighbor);
                     }
-//                    System.out.println("neig" + neighbor);
                 }
 
             }
 
-//            System.out.println();
         }
 
         return cameFrom(cameFrom, e);
     }
 
-    List<Point> cameFrom(Map<Point, Point> prev, Point end) {
+    private List<Point> cameFrom(Map<Point, Point> prev, Point end) {
 
         final List<Point> shortestPath = new LinkedList<>();
 
@@ -117,12 +101,18 @@ public class AStar implements Pathfinder {
         return current.distance(e);
     }
 
+    public Vertex getVertex(int x, int y) {
+        return grid[x][y];
+    }
+
+
     static class Vertex implements Comparable<Vertex> {
 
-        private double g;
-        private double f;
         private final Point pos;
         private VertexType type;
+        private double g;
+        private double f;
+
 
         Vertex(Point pos) {
             this.pos = pos;

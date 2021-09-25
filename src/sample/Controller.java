@@ -11,6 +11,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Controller {
@@ -25,7 +26,10 @@ public class Controller {
     private final Marker end = new Marker(Color.rgb(227, 74, 111));
 
     private DijkstraPathfinder dijkstraPathfinder;
+    private AStar aStar;
     private boolean pathFound;
+
+    List<Point> walls = new ArrayList<>();
 
 
     @FXML
@@ -35,7 +39,6 @@ public class Controller {
     public void initialize() {
         mainCanvas.addEventFilter(MouseEvent.ANY, e -> mainCanvas.requestFocus());
         graphicsContext2D = mainCanvas.getGraphicsContext2D();
-
         resetCanvas();
     }
 
@@ -53,7 +56,10 @@ public class Controller {
         end.unSet();
 
         dijkstraPathfinder = null;
+        aStar = null;
         pathFound = false;
+
+        walls.clear();
 
     }
 
@@ -124,10 +130,7 @@ public class Controller {
         graphicsContext2D.setFill(Color.BLACK);
         graphicsContext2D.fillRect(mousePos.x * len, mousePos.y * len, len, len);
 
-        if (dijkstraPathfinder == null) {
-            dijkstraPathfinder = new DijkstraPathfinder(gridSize);
-        }
-        dijkstraPathfinder.getVertex(mousePos.x, mousePos.y).setType(DijkstraPathfinder.VERTEX_TYPE.WALL);
+        walls.add(new Point(mousePos.x, mousePos.y));
 
         // replaces start with wall
         if (start.getPosition().x == mousePos.x && start.getPosition().y == mousePos.y) {
@@ -195,13 +198,7 @@ public class Controller {
 
     }
 
-    /**
-     * Stats the pathfinding animation.
-     *
-     * @param actionEvent Action event.
-     */
-    @FXML
-    private void startDij(ActionEvent actionEvent) {
+    private boolean hasStartFinish() {
 
         Alert missingStartFinishAlert = new Alert(Alert.AlertType.ERROR);
         missingStartFinishAlert.setHeaderText(null);
@@ -211,23 +208,66 @@ public class Controller {
             case "s" -> {
                 missingStartFinishAlert.setContentText("Starting point not set.");
                 missingStartFinishAlert.showAndWait();
-                return;
+                return false;
             }
 
             case "e" -> {
                 missingStartFinishAlert.setContentText("Ending point not set.");
                 missingStartFinishAlert.showAndWait();
-                return;
+                return false;
             }
         }
 
-        if (dijkstraPathfinder == null) {
-            dijkstraPathfinder = new DijkstraPathfinder(gridSize);
+        return true;
+    }
+
+    @FXML
+    public void startAStar(ActionEvent actionEvent) {
+
+        if (!hasStartFinish()) {
+            return;
+        }
+
+        aStar = new AStar(gridSize);
+
+        walls.forEach(wall -> aStar.getVertex(wall.x, wall.y).setType(AStar.VertexType.WALL));
+
+        List<Point> path = aStar.shortestPath(start.getPosition(), end.getPosition());
+        path.remove(end.getPosition());
+        path.remove(start.getPosition());
+
+        pathValidityMsg(path);
+    }
+
+
+    /**
+     * Stats the pathfinding animation.
+     *
+     * @param actionEvent Action event.
+     */
+    @FXML
+    private void startDij(ActionEvent actionEvent) {
+
+        if (!hasStartFinish()) {
+            return;
+        }
+
+        dijkstraPathfinder = new DijkstraPathfinder(gridSize);
+
+        for (Point wall : walls) {
+            dijkstraPathfinder.getVertex(wall.x, wall.y).setType(DijkstraPathfinder.VertexType.WALL);
+
         }
 
         List<Point> path = dijkstraPathfinder.shortestPath(start.getPosition(), end.getPosition());
         path.remove(end.getPosition());
         path.remove(start.getPosition());
+
+        pathValidityMsg(path);
+
+    }
+
+    private void pathValidityMsg(List<Point> path) {
 
         if (path.isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -241,7 +281,6 @@ public class Controller {
                 pathFound = true;
             }
         }
-
     }
 
     /**
@@ -249,14 +288,10 @@ public class Controller {
      */
     private void genRandomWalls() {
 
-        if (dijkstraPathfinder == null) {
-            dijkstraPathfinder = new DijkstraPathfinder(gridSize);
-        }
-
         for (int i = 0; i < mainCanvas.getHeight() / len; i++) {
             for (int j = 0; j < mainCanvas.getWidth() / len; j++) {
                 if (Math.random() < 0.3) {
-                    addWall(new Point((int) (Math.random() * dijkstraPathfinder.getSize()), (int) (Math.random() * dijkstraPathfinder.getSize())));
+                    addWall(new Point((int) (Math.random() * mainCanvas.getHeight() / len), (int) (Math.random() * mainCanvas.getHeight() / len)));
                 }
             }
         }
@@ -269,14 +304,10 @@ public class Controller {
      */
     private void genRandomStartEnd() {
 
-        if (dijkstraPathfinder == null) {
-            dijkstraPathfinder = new DijkstraPathfinder(gridSize);
-        }
-
-        setMarker(start, new Point((int) (Math.random() * dijkstraPathfinder.getSize()), (int) (Math.random() * dijkstraPathfinder.getSize())));
+        setMarker(start, new Point((int) (Math.random() * mainCanvas.getHeight() / len), (int) (Math.random() * mainCanvas.getHeight() / len)));
 
         do {
-            setMarker(end, new Point((int) (Math.random() * dijkstraPathfinder.getSize()), (int) (Math.random() * dijkstraPathfinder.getSize())));
+            setMarker(end, new Point((int) (Math.random() * mainCanvas.getHeight() / len), (int) (Math.random() * mainCanvas.getHeight() / len)));
         } while (start.getPosition().equals(end.getPosition()));
 
     }
@@ -361,6 +392,5 @@ public class Controller {
         }
     }
 
-    public void startAStar(ActionEvent actionEvent) {
-    }
+
 }
