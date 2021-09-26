@@ -25,9 +25,7 @@ public class Controller {
     private final Marker start = new Marker(Color.rgb(96, 165, 97));
     private final Marker end = new Marker(Color.rgb(227, 74, 111));
 
-    private AStar aStar;
-
-    List<Point> walls = new LinkedList<>();
+    private final List<Point> walls = new LinkedList<>();
     private boolean pathFound;
 
     @FXML
@@ -50,7 +48,6 @@ public class Controller {
         redrawCanvas();
         resetMarkers();
 
-        aStar = null;
         pathFound = false;
 
         walls.clear();
