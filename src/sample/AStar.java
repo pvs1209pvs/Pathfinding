@@ -4,7 +4,7 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-public class AStar{
+public class AStar {
 
     private final Vertex[][] grid;
 
@@ -21,6 +21,9 @@ public class AStar{
     }
 
     public List<Point> shortestPath(Point s, Point e) {
+
+        grid[s.x][s.y].type = VertexType.PATH;
+        grid[e.x][e.y].type = VertexType.PATH;
 
         PriorityQueue<Vertex> openSet = new PriorityQueue<>();
         Map<Point, Point> cameFrom = new HashMap<>();
@@ -48,10 +51,12 @@ public class AStar{
                     cameFrom.put(neighbor.pos, current.pos);
                     neighbor.g = t;
                     neighbor.f = neighbor.g + hScore(neighbor.pos, e);
-                    if (!openSet.contains(neighbor)) {
+
+                    if (openSet.stream().noneMatch(u -> u.pos == neighbor.pos)) {
                         openSet.add(neighbor);
                     }
                 }
+
 
             }
 

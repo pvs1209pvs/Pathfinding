@@ -16,7 +16,7 @@ import java.util.List;
 
 public class Controller {
 
-    private static int gridSize = 50;
+    private static int gridSize = 500;
     public static int len = 500 / gridSize;
 
     private GraphicsContext graphicsContext2D;
@@ -223,6 +223,8 @@ public class Controller {
     @FXML
     public void startAStar(ActionEvent actionEvent) {
 
+        System.out.println(start.getPosition() + " " + end.getPosition());
+
         if (!hasStartFinish()) {
             return;
         }
@@ -237,7 +239,6 @@ public class Controller {
 
         pathValidityMsg(path);
 
-        System.out.println("dij " + pathFound);
 
     }
 
@@ -249,6 +250,8 @@ public class Controller {
      */
     @FXML
     private void startDij(ActionEvent actionEvent) {
+
+        System.out.println(pathFound);
 
         if (!hasStartFinish()) {
             return;

@@ -23,11 +23,11 @@ public class DijkstraPathfinder {
 
     public List<Point> shortestPath(Point s, Point e) {
 
-        final Queue<Vertex> q = new ArrayDeque<>();
-        final Map<Point, Point> prev = new HashMap<>();
-
         grid[s.x][s.y].type = VertexType.PATH;
         grid[e.x][e.y].type = VertexType.PATH;
+
+        final Queue<Vertex> q = new ArrayDeque<>();
+        final Map<Point, Point> prev = new HashMap<>();
 
         grid[s.x][s.y].dist = 0;
         q.add(grid[s.x][s.y]);
@@ -83,7 +83,6 @@ public class DijkstraPathfinder {
         for (Point dir : explorationDir) {
             int newX = current.pos.x + dir.x;
             int newY = current.pos.y + dir.y;
-//            !grid[newC][newR].visited
             if (newX >= 0 && newX < grid.length && newY >= 0 && newY < grid.length && grid[newX][newY].type == VertexType.PATH) {
                 neighbors.add(grid[newX][newY]);
             }
