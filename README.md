@@ -2,4 +2,6 @@
 
 Visualization of Dijkstra's algorithm on a 2D grid.
 
-![](pathfinding_demo_gif.gif)
+![empty grid](main.png)
+![grid with path](path.png)
+
