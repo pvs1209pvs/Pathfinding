@@ -23,9 +23,6 @@ public class Dijkstra {
 
     public List<Point> shortestPath(Point s, Point e) {
 
-        grid[s.x][s.y].type = VertexType.PATH;
-        grid[e.x][e.y].type = VertexType.PATH;
-
         final Queue<Vertex> q = new ArrayDeque<>();
         final Map<Point, Point> prev = new HashMap<>();
 
@@ -36,14 +33,13 @@ public class Dijkstra {
 
             final Vertex u = q.remove();
             final List<Vertex> neighbors = getNeighbors(u);
-            neighbors.removeIf(cond -> cond.visited);
 
             for (Vertex v : neighbors) {
 
                 v.visited = true;
                 q.add(v);
 
-                int altDist = u.dist + 1;
+                final int altDist = u.dist + 1;
                 if (altDist < v.dist) {
                     v.dist = altDist;
                     prev.put(v.pos, u.pos);
@@ -83,7 +79,7 @@ public class Dijkstra {
         for (Point dir : explorationDir) {
             int newX = current.pos.x + dir.x;
             int newY = current.pos.y + dir.y;
-            if (newX >= 0 && newX < grid.length && newY >= 0 && newY < grid.length && grid[newX][newY].type == VertexType.PATH) {
+            if (newX >= 0 && newX < grid.length && newY >= 0 && newY < grid.length && grid[newX][newY].type == VertexType.PATH && !grid[newX][newY].visited) {
                 neighbors.add(grid[newX][newY]);
             }
         }

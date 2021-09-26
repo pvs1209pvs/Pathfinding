@@ -238,6 +238,9 @@ public class Controller {
 
         walls.forEach(wall -> aStar.getVertex(wall.x, wall.y).setType(AStar.VertexType.WALL));
 
+        aStar.getVertex(start.getPosition().x, start.getPosition().y).setType(AStar.VertexType.PATH);
+        aStar.getVertex(end.getPosition().x, end.getPosition().y).setType(AStar.VertexType.PATH);
+
         List<Point> path = aStar.shortestPath(start.getPosition(), end.getPosition());
         path.remove(end.getPosition());
         path.remove(start.getPosition());
@@ -262,6 +265,9 @@ public class Controller {
         dijkstra = new Dijkstra(gridSize);
 
         walls.forEach(wall -> dijkstra.getVertex(wall.x, wall.y).setType(Dijkstra.VertexType.WALL));
+
+        dijkstra.getVertex(start.getPosition().x, start.getPosition().y).setType(Dijkstra.VertexType.PATH);
+        dijkstra.getVertex(end.getPosition().x, end.getPosition().y).setType(Dijkstra.VertexType.PATH);
 
         List<Point> path = dijkstra.shortestPath(start.getPosition(), end.getPosition());
         path.remove(end.getPosition());

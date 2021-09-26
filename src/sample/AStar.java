@@ -22,11 +22,10 @@ public class AStar {
 
     public List<Point> shortestPath(Point s, Point e) {
 
-        grid[s.x][s.y].type = VertexType.PATH;
-        grid[e.x][e.y].type = VertexType.PATH;
 
-        PriorityQueue<Vertex> openSet = new PriorityQueue<>();
-        Map<Point, Point> cameFrom = new HashMap<>();
+
+        final PriorityQueue<Vertex> openSet = new PriorityQueue<>();
+        final Map<Point, Point> cameFrom = new HashMap<>();
 
         openSet.add(grid[s.x][s.y]);
 
@@ -35,17 +34,17 @@ public class AStar {
 
         while (!openSet.isEmpty()) {
 
-            Vertex current = openSet.poll();
+            final Vertex current = openSet.poll();
 
             if (current.pos == e) {
                 return null;
             }
 
-            List<Vertex> neighbors = getNeighbors(current);
+            final List<Vertex> neighbors = getNeighbors(current);
 
             for (Vertex neighbor : neighbors) {
 
-                double t = current.g + 1;
+                final double t = current.g + 1;
 
                 if (t < neighbor.g) {
                     cameFrom.put(neighbor.pos, current.pos);
