@@ -21,6 +21,12 @@ public class Dijkstra {
 
     }
 
+    /**
+     * Returns the shortest path from start to finish.
+     * @param s Starting point.
+     * @param e Ending point.
+     * @return Shortest path.
+     */
     public List<Point> shortestPath(Point s, Point e) {
 
         final Queue<Vertex> q = new ArrayDeque<>();
@@ -53,6 +59,12 @@ public class Dijkstra {
 
     }
 
+    /**
+     * Find whom the current vertex came from
+     * @param prev Parent vertex.
+     * @param end Child vertex.
+     * @return List of shortest path.
+     */
     private List<Point> cameFrom(Map<Point, Point> prev, Point end) {
 
         final List<Point> shortestPath = new LinkedList<>();
@@ -66,6 +78,11 @@ public class Dijkstra {
 
     }
 
+    /**
+     * Returns the neighbors of the vertex.
+     * @param current Current vertex
+     * @return Neighbors of the vertex.
+     */
     private List<Vertex> getNeighbors(Vertex current) {
 
         final List<Vertex> neighbors = new ArrayList<>();
