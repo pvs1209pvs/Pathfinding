@@ -7,27 +7,14 @@ import java.util.*;
 
 public class Dijkstra {
 
-    private final Vertex[][] grid;
-
-    Dijkstra(int size) {
-
-        grid = new Vertex[size][size];
-
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                setVertex(new Vertex(new Point(i, j)));
-            }
-        }
-
-    }
-
     /**
      * Returns the shortest path from start to finish.
+     *
      * @param s Starting point.
      * @param e Ending point.
      * @return Shortest path.
      */
-    public List<Point> shortestPath(Point s, Point e) {
+    public static List<Point> shortestPath(Vertex[][] grid, Point s, Point e) {
 
         final Queue<Vertex> q = new ArrayDeque<>();
         final Map<Point, Point> prev = new HashMap<>();
@@ -38,7 +25,7 @@ public class Dijkstra {
         while (!q.isEmpty()) {
 
             final Vertex u = q.remove();
-            final List<Vertex> neighbors = getNeighbors(u);
+            final List<Vertex> neighbors = getNeighbors(grid, u);
 
             for (Vertex v : neighbors) {
 
@@ -61,11 +48,12 @@ public class Dijkstra {
 
     /**
      * Find whom the current vertex came from
+     *
      * @param prev Parent vertex.
-     * @param end Child vertex.
+     * @param end  Child vertex.
      * @return List of shortest path.
      */
-    private List<Point> cameFrom(Map<Point, Point> prev, Point end) {
+    private static List<Point> cameFrom(Map<Point, Point> prev, Point end) {
 
         final List<Point> shortestPath = new LinkedList<>();
 
@@ -80,10 +68,11 @@ public class Dijkstra {
 
     /**
      * Returns the neighbors of the vertex.
+     *
      * @param current Current vertex
      * @return Neighbors of the vertex.
      */
-    private List<Vertex> getNeighbors(Vertex current) {
+    private static List<Vertex> getNeighbors(Vertex[][] grid, Vertex current) {
 
         final List<Vertex> neighbors = new ArrayList<>();
         final List<Point> explorationDir = List.of(
@@ -103,18 +92,6 @@ public class Dijkstra {
 
         return neighbors;
 
-    }
-
-    public void setVertex(Vertex v) {
-        this.grid[v.pos.x][v.pos.y] = v;
-    }
-
-    public Vertex getVertex(int x, int y) {
-        return this.grid[x][y];
-    }
-
-    public int getSize() {
-        return this.grid.length;
     }
 
     enum VertexType {
@@ -143,7 +120,6 @@ public class Dijkstra {
         public String toString() {
             return "[" + pos + " " + dist + " " + this.type + "]";
         }
-
 
     }
 

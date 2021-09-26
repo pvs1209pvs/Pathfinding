@@ -17,11 +17,9 @@
         </padding>
 
         <Button text="Dijkstra" prefWidth="80" onAction="#startDij"/>
-
         <Button text="AStar" prefWidth="80" onAction="#startAStar"/>
         <Button text="Random" prefWidth="80" onAction="#genRandom"/>
         <Button text="Clear" prefWidth="80" onAction="#clearButton"/>
-
         <Button text="Quit" prefWidth="80" onAction="#quitButton"/>
 
         <HBox spacing="5" alignment="CENTER">

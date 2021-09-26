@@ -6,23 +6,7 @@ import java.util.List;
 
 public class AStar {
 
-    private final Vertex[][] grid;
-
-    AStar(int size) {
-
-        grid = new Vertex[size][size];
-
-        for (int i = 0; i < grid.length; i++) {
-            for (int j = 0; j < grid.length; j++) {
-                grid[i][j] = new Vertex(new Point(i, j));
-            }
-        }
-
-    }
-
-    public List<Point> shortestPath(Point s, Point e) {
-
-
+    public static List<Point> shortestPath(Vertex[][] grid, Point s, Point e) {
 
         final PriorityQueue<Vertex> openSet = new PriorityQueue<>();
         final Map<Point, Point> cameFrom = new HashMap<>();
@@ -37,10 +21,10 @@ public class AStar {
             final Vertex current = openSet.poll();
 
             if (current.pos == e) {
-                return null;
+                return new ArrayList<>();
             }
 
-            final List<Vertex> neighbors = getNeighbors(current);
+            final List<Vertex> neighbors = getNeighbors(grid, current);
 
             for (Vertex neighbor : neighbors) {
 
@@ -63,7 +47,7 @@ public class AStar {
         return cameFrom(cameFrom, e);
     }
 
-    private List<Point> cameFrom(Map<Point, Point> prev, Point end) {
+    private static List<Point> cameFrom(Map<Point, Point> prev, Point end) {
 
         final List<Point> shortestPath = new LinkedList<>();
 
@@ -76,7 +60,7 @@ public class AStar {
 
     }
 
-    private List<Vertex> getNeighbors(Vertex current) {
+    private static List<Vertex> getNeighbors(Vertex[][] grid, Vertex current) {
 
         final List<Vertex> neighbors = new ArrayList<>();
         final List<Point> explorationDir = List.of(
@@ -100,12 +84,8 @@ public class AStar {
 
     }
 
-    private double hScore(Point current, Point e) {
+    private static double hScore(Point current, Point e) {
         return current.distance(e);
-    }
-
-    public Vertex getVertex(int x, int y) {
-        return grid[x][y];
     }
 
     static class Vertex implements Comparable<Vertex> {

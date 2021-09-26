@@ -25,7 +25,6 @@ public class Controller {
     private final Marker start = new Marker(Color.rgb(96, 165, 97));
     private final Marker end = new Marker(Color.rgb(227, 74, 111));
 
-    private Dijkstra dijkstra;
     private AStar aStar;
 
     List<Point> walls = new LinkedList<>();
@@ -51,7 +50,6 @@ public class Controller {
         redrawCanvas();
         resetMarkers();
 
-        dijkstra = null;
         aStar = null;
         pathFound = false;
 
@@ -234,14 +232,18 @@ public class Controller {
             return;
         }
 
-        aStar = new AStar(gridSize);
+        AStar.Vertex[][] grid = new AStar.Vertex[gridSize][gridSize];
+        for (int i = 0; i < gridSize; i++) {
+            for (int j = 0; j < gridSize; j++) {
+                grid[i][j] = new AStar.Vertex(new Point(i, j));
+            }
+        }
 
-        walls.forEach(wall -> aStar.getVertex(wall.x, wall.y).setType(AStar.VertexType.WALL));
+        walls.forEach(w -> grid[w.x][w.y].setType(AStar.VertexType.WALL));
+        grid[start.getPosition().x][start.getPosition().y].setType(AStar.VertexType.PATH);
+        grid[end.getPosition().x][end.getPosition().y].setType(AStar.VertexType.PATH);
 
-        aStar.getVertex(start.getPosition().x, start.getPosition().y).setType(AStar.VertexType.PATH);
-        aStar.getVertex(end.getPosition().x, end.getPosition().y).setType(AStar.VertexType.PATH);
-
-        List<Point> path = aStar.shortestPath(start.getPosition(), end.getPosition());
+        List<Point> path = AStar.shortestPath(grid, start.getPosition(), end.getPosition());
         path.remove(end.getPosition());
         path.remove(start.getPosition());
 
@@ -262,14 +264,18 @@ public class Controller {
             return;
         }
 
-        dijkstra = new Dijkstra(gridSize);
+        Dijkstra.Vertex[][] grid = new Dijkstra.Vertex[gridSize][gridSize];
+        for (int i = 0; i < gridSize; i++) {
+            for (int j = 0; j < gridSize; j++) {
+                grid[i][j] = new Dijkstra.Vertex(new Point(i, j));
+            }
+        }
 
-        walls.forEach(wall -> dijkstra.getVertex(wall.x, wall.y).setType(Dijkstra.VertexType.WALL));
+        walls.forEach(w -> grid[w.x][w.y].setType(Dijkstra.VertexType.WALL));
+        grid[start.getPosition().x][start.getPosition().y].setType(Dijkstra.VertexType.PATH);
+        grid[end.getPosition().x][end.getPosition().y].setType(Dijkstra.VertexType.PATH);
 
-        dijkstra.getVertex(start.getPosition().x, start.getPosition().y).setType(Dijkstra.VertexType.PATH);
-        dijkstra.getVertex(end.getPosition().x, end.getPosition().y).setType(Dijkstra.VertexType.PATH);
-
-        List<Point> path = dijkstra.shortestPath(start.getPosition(), end.getPosition());
+        List<Point> path = Dijkstra.shortestPath(grid, start.getPosition(), end.getPosition());
         path.remove(end.getPosition());
         path.remove(start.getPosition());
 
@@ -300,7 +306,7 @@ public class Controller {
 
         for (int i = 0; i < mainCanvas.getHeight() / len; i++) {
             for (int j = 0; j < mainCanvas.getWidth() / len; j++) {
-                if (Math.random() < 0.3) {
+                if (Math.random() < 0.4) {
                     addWall(new Point((int) (Math.random() * mainCanvas.getHeight() / len), (int) (Math.random() * mainCanvas.getHeight() / len)));
                 }
             }
