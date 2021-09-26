@@ -5,11 +5,11 @@ import java.util.List;
 import java.util.Queue;
 import java.util.*;
 
-public class DijkstraPathfinder {
+public class Dijkstra {
 
     private final Vertex[][] grid;
 
-    DijkstraPathfinder(int size) {
+    Dijkstra(int size) {
 
         grid = new Vertex[size][size];
 

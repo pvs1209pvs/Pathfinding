@@ -11,12 +11,12 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Controller {
 
-    private static int gridSize = 500;
+    private static int gridSize = 50;
     public static int len = 500 / gridSize;
 
     private GraphicsContext graphicsContext2D;
@@ -25,10 +25,10 @@ public class Controller {
     private final Marker start = new Marker(Color.rgb(96, 165, 97));
     private final Marker end = new Marker(Color.rgb(227, 74, 111));
 
-    private DijkstraPathfinder dijkstraPathfinder;
+    private Dijkstra dijkstra;
     private AStar aStar;
 
-    List<Point> walls = new ArrayList<>();
+    List<Point> walls = new LinkedList<>();
     private boolean pathFound;
 
     @FXML
@@ -46,20 +46,27 @@ public class Controller {
      */
     private void resetCanvas() {
 
-        clearCanvas();
-        drawLines();
-
         keyPress = "";
 
-        start.unSet();
-        end.unSet();
+        redrawCanvas();
+        resetMarkers();
 
-        dijkstraPathfinder = null;
+        dijkstra = null;
         aStar = null;
         pathFound = false;
 
         walls.clear();
 
+    }
+
+    private void redrawCanvas() {
+        clearCanvas();
+        drawLines();
+    }
+
+    private void resetMarkers() {
+        start.unSet();
+        end.unSet();
     }
 
     /**
@@ -223,8 +230,6 @@ public class Controller {
     @FXML
     public void startAStar(ActionEvent actionEvent) {
 
-        System.out.println(start.getPosition() + " " + end.getPosition());
-
         if (!hasStartFinish()) {
             return;
         }
@@ -239,7 +244,6 @@ public class Controller {
 
         pathValidityMsg(path);
 
-
     }
 
 
@@ -251,25 +255,19 @@ public class Controller {
     @FXML
     private void startDij(ActionEvent actionEvent) {
 
-        System.out.println(pathFound);
-
         if (!hasStartFinish()) {
             return;
         }
 
-        dijkstraPathfinder = new DijkstraPathfinder(gridSize);
+        dijkstra = new Dijkstra(gridSize);
 
-        for (Point wall : walls) {
-            dijkstraPathfinder.getVertex(wall.x, wall.y).setType(DijkstraPathfinder.VertexType.WALL);
+        walls.forEach(wall -> dijkstra.getVertex(wall.x, wall.y).setType(Dijkstra.VertexType.WALL));
 
-        }
-
-        List<Point> path = dijkstraPathfinder.shortestPath(start.getPosition(), end.getPosition());
+        List<Point> path = dijkstra.shortestPath(start.getPosition(), end.getPosition());
         path.remove(end.getPosition());
         path.remove(start.getPosition());
 
         pathValidityMsg(path);
-        System.out.println("dij " + pathFound);
 
     }
 
