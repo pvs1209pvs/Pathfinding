@@ -51,7 +51,7 @@ public class Dijkstra {
      *
      * @param prev Parent vertex.
      * @param end  Child vertex.
-     * @return List of shortest path.
+     * @return List of the shortest path.
      */
     private static List<Point> cameFrom(Map<Point, Point> prev, Point end) {
 
