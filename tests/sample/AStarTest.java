@@ -23,13 +23,13 @@ class AStarTest {
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid.length; j++) {
                 if (random.nextDouble() < 0.3) {
-                    grid[i][j].setType(AStar.VertexType.WALL);
+                    grid[i][j].setType(VertexType.WALL);
                 }
             }
         }
 
-        grid[0][0].setType(AStar.VertexType.PATH);
-        grid[grid.length-1][grid.length-1].setType(AStar.VertexType.PATH);
+        grid[0][0].setType(VertexType.PATH);
+        grid[grid.length-1][grid.length-1].setType(VertexType.PATH);
 
         return AStar.shortestPath(grid, new Point(0,0), new Point(grid.length-1, grid.length-1)).size();
     }

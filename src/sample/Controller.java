@@ -5,19 +5,28 @@ import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.effect.Glow;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 import java.awt.*;
+import java.text.DecimalFormat;
 import java.util.LinkedList;
 import java.util.List;
 
 public class Controller {
 
-    private static int gridSize = 50;
-    public static int len = 500 / gridSize;
+    static final int CANVAS_SIZE = 800;
+    private static int gridSize = 25;
+    public static int len = CANVAS_SIZE / gridSize;
+    public HBox mainHBox;
+    public Button quit;
+    public Button clear;
+    public Button details;
 
     private GraphicsContext graphicsContext2D;
     private String keyPress;
@@ -33,9 +42,12 @@ public class Controller {
 
     @FXML
     public void initialize() {
+        mainCanvas.setHeight(CANVAS_SIZE);
+        mainCanvas.setWidth(CANVAS_SIZE);
         mainCanvas.addEventFilter(MouseEvent.ANY, e -> mainCanvas.requestFocus());
         graphicsContext2D = mainCanvas.getGraphicsContext2D();
         resetCanvas();
+
     }
 
     /**
@@ -80,9 +92,9 @@ public class Controller {
         graphicsContext2D.setFill(Color.BLACK);
         graphicsContext2D.setLineWidth(0.15);
 
-        for (int i = 0; i < 500; i += len) {
-            graphicsContext2D.strokeLine(0, i, 500, i);
-            graphicsContext2D.strokeLine(i, 0, i, 500);
+        for (int i = 0; i < CANVAS_SIZE; i += len) {
+            graphicsContext2D.strokeLine(0, i, CANVAS_SIZE, i);
+            graphicsContext2D.strokeLine(i, 0, i, CANVAS_SIZE);
         }
 
     }
@@ -236,16 +248,36 @@ public class Controller {
             }
         }
 
-        walls.forEach(w -> grid[w.x][w.y].setType(AStar.VertexType.WALL));
-        grid[start.getPosition().x][start.getPosition().y].setType(AStar.VertexType.PATH);
-        grid[end.getPosition().x][end.getPosition().y].setType(AStar.VertexType.PATH);
+        walls.forEach(w -> grid[w.x][w.y].setType(VertexType.WALL));
+        grid[start.getPosition().x][start.getPosition().y].setType(VertexType.PATH);
+        grid[end.getPosition().x][end.getPosition().y].setType(VertexType.PATH);
 
         List<Point> path = AStar.shortestPath(grid, start.getPosition(), end.getPosition());
         path.remove(end.getPosition());
         path.remove(start.getPosition());
 
+
         pathValidityMsg(path);
 
+        details.setOnMouseClicked(eve -> writeAStarScore(grid));
+
+    }
+
+
+    private void writeAStarScore(GridVertex[][] grid) {
+
+        graphicsContext2D.setFont(new Font("Arial", 10));
+        graphicsContext2D.setFill(Color.BLACK);
+        DecimalFormat decimalFormat = new DecimalFormat("##.#");
+
+        for (int i = 0; i < gridSize; i++) {
+            for (int j = 0; j < gridSize; j++) {
+                double score = grid[i][j].getScore();
+                String scoreText = score == Integer.MAX_VALUE ? "Inf" : decimalFormat.format(score);
+                graphicsContext2D.fillText(scoreText, i * (len), (j + 1) * (len));
+
+            }
+        }
     }
 
 
@@ -268,15 +300,17 @@ public class Controller {
             }
         }
 
-        walls.forEach(w -> grid[w.x][w.y].setType(Dijkstra.VertexType.WALL));
-        grid[start.getPosition().x][start.getPosition().y].setType(Dijkstra.VertexType.PATH);
-        grid[end.getPosition().x][end.getPosition().y].setType(Dijkstra.VertexType.PATH);
+        walls.forEach(w -> grid[w.x][w.y].setType(VertexType.WALL));
+        grid[start.getPosition().x][start.getPosition().y].setType(VertexType.PATH);
+        grid[end.getPosition().x][end.getPosition().y].setType(VertexType.PATH);
 
         List<Point> path = Dijkstra.shortestPath(grid, start.getPosition(), end.getPosition());
         path.remove(end.getPosition());
         path.remove(start.getPosition());
 
         pathValidityMsg(path);
+        details.setOnMouseClicked(eve -> writeAStarScore(grid));
+
 
     }
 
@@ -374,7 +408,7 @@ public class Controller {
     public void decrGridSize(ActionEvent actionEvent) {
         if (gridSize > 5) {
             gridSize -= 5;
-            len = 500 / gridSize;
+            len = CANVAS_SIZE / gridSize;
             resetCanvas();
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -394,7 +428,7 @@ public class Controller {
     public void incrGridSize(ActionEvent actionEvent) {
         if (gridSize < 50) {
             gridSize += 5;
-            len = 500 / gridSize;
+            len = CANVAS_SIZE / gridSize;
             resetCanvas();
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -406,4 +440,7 @@ public class Controller {
     }
 
 
+//    public void showDetails(ActionEvent actionEvent) {
+//        writeScore();
+//    }
 }

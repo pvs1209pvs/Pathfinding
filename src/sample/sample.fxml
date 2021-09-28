@@ -9,18 +9,19 @@
 <?import javafx.geometry.Insets?>
 
 <?import javafx.scene.layout.Pane?>
-<HBox fx:controller="sample.Controller" xmlns:fx="http://javafx.com/fxml" alignment="center">
+<HBox fx:id="mainHBox" fx:controller="sample.Controller" xmlns:fx="http://javafx.com/fxml" alignment="center">
 
     <VBox prefWidth="130" alignment="CENTER" spacing="10">
         <padding>
             <Insets topRightBottomLeft="10"/>
         </padding>
 
-        <Button text="Dijkstra" prefWidth="80" onAction="#startDij"/>
         <Button text="AStar" prefWidth="80" onAction="#startAStar"/>
+        <Button text="Dijkstra" prefWidth="80" onAction="#startDij"/>
         <Button text="Random" prefWidth="80" onAction="#genRandom"/>
-        <Button text="Clear" prefWidth="80" onAction="#clearButton"/>
-        <Button text="Quit" prefWidth="80" onAction="#quitButton"/>
+        <Button fx:id="details" text="Show Score" prefWidth="80" />
+        <Button fx:id="clear" text="Clear" prefWidth="80" onAction="#clearButton"/>
+        <Button fx:id="quit" text="Quit" prefWidth="80" onAction="#quitButton"/>
 
         <HBox spacing="5" alignment="CENTER">
             <Button text="+" prefWidth="80" onAction="#incrGridSize"/>
@@ -39,7 +40,7 @@
 
     </VBox>
 
-    <Canvas fx:id="mainCanvas" height="500.0" width="500.0"
+    <Canvas fx:id="mainCanvas"
             onMouseDragged="#addWall"
             onMouseClicked="#addStartFinish"
             onKeyPressed="#option">

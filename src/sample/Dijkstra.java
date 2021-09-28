@@ -94,11 +94,7 @@ public class Dijkstra {
 
     }
 
-    enum VertexType {
-        WALL, PATH
-    }
-
-    static class Vertex {
+    static class Vertex implements GridVertex {
 
         private final Point pos;
         private VertexType type;
@@ -121,6 +117,10 @@ public class Dijkstra {
             return "[" + pos + " " + dist + " " + this.type + "]";
         }
 
+        @Override
+        public double getScore() {
+            return dist;
+        }
     }
 
 }

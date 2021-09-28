@@ -88,7 +88,7 @@ public class AStar {
         return current.distance(e);
     }
 
-    static class Vertex implements Comparable<Vertex> {
+    static class Vertex implements Comparable<Vertex>, GridVertex {
 
         private final Point pos;
         private VertexType type;
@@ -100,6 +100,14 @@ public class AStar {
             this.g = Integer.MAX_VALUE;
             this.f = Integer.MAX_VALUE;
             this.type = VertexType.PATH;
+        }
+
+        public double getF() {
+            return f;
+        }
+
+        public double getG() {
+            return g;
         }
 
         public VertexType getType() {
@@ -120,10 +128,11 @@ public class AStar {
             return Double.compare(this.f, vertex.f);
         }
 
+        @Override
+        public double getScore() {
+            return f;
+        }
     }
 
-    public enum VertexType {
-        PATH, WALL
-    }
 
 }
