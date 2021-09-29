@@ -9,6 +9,9 @@
 <?import javafx.geometry.Insets?>
 
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
 <HBox fx:id="mainHBox" fx:controller="sample.Controller" xmlns:fx="http://javafx.com/fxml" alignment="center">
 
     <VBox prefWidth="130" alignment="CENTER" spacing="10">
@@ -16,8 +19,21 @@
             <Insets topRightBottomLeft="10"/>
         </padding>
 
-        <Button text="AStar" prefWidth="80" onAction="#startAStar"/>
-        <Button text="Dijkstra" prefWidth="80" onAction="#startDij"/>
+        <ComboBox fx:id="algoSelect" onAction="#cool">
+            <items>
+                <FXCollections fx:factory="observableArrayList">
+                    <String fx:value="A-Star"/>
+                    <String fx:value="Dijkstra"/>
+
+                </FXCollections>
+            </items>
+            <value>
+                <String fx:value="A-Star"/>
+            </value>
+        </ComboBox>
+
+<!--        <Button text="AStar" prefWidth="80" onAction="#startAStar"/>-->
+<!--        <Button text="Dijkstra" prefWidth="80" onAction="#startDij"/>-->
         <Button text="Random" prefWidth="80" onAction="#genRandom"/>
         <Button fx:id="details" text="Show Score" prefWidth="80" />
         <Button fx:id="clear" text="Clear" prefWidth="80" onAction="#clearButton"/>

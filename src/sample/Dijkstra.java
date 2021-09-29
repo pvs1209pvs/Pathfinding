@@ -14,18 +14,18 @@ public class Dijkstra {
      * @param e Ending point.
      * @return Shortest path.
      */
-    public static List<Point> shortestPath(Vertex[][] grid, Point s, Point e) {
+    public static List<Point> shortestPath(GridVertex[][] grid, Point s, Point e) {
 
         final Queue<Vertex> q = new ArrayDeque<>();
         final Map<Point, Point> prev = new HashMap<>();
 
-        grid[s.x][s.y].dist = 0;
-        q.add(grid[s.x][s.y]);
+        ((Vertex) grid[s.x][s.y]).dist = 0;
+        q.add((Vertex) grid[s.x][s.y]);
 
         while (!q.isEmpty()) {
 
             final Vertex u = q.remove();
-            final List<Vertex> neighbors = getNeighbors(grid, u);
+            final List<Vertex> neighbors = getNeighbors((Vertex[][]) grid, u);
 
             for (Vertex v : neighbors) {
 
@@ -42,7 +42,7 @@ public class Dijkstra {
 
         }
 
-        return cameFrom(prev, grid[e.x][e.y].pos);
+        return cameFrom(prev, ((Vertex) grid[e.x][e.y]).pos);
 
     }
 

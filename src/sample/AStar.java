@@ -6,15 +6,15 @@ import java.util.List;
 
 public class AStar {
 
-    public static List<Point> shortestPath(Vertex[][] grid, Point s, Point e) {
+    public static List<Point> shortestPath(GridVertex[][] grid, Point s, Point e) {
 
         final PriorityQueue<Vertex> openSet = new PriorityQueue<>();
         final Map<Point, Point> cameFrom = new HashMap<>();
 
-        openSet.add(grid[s.x][s.y]);
+        openSet.add((Vertex) grid[s.x][s.y]);
 
-        grid[s.x][s.y].g = 0;
-        grid[s.x][s.y].f = grid[s.x][s.y].g + hScore(grid[s.x][s.y].pos, e);
+        ((Vertex) grid[s.x][s.y]).g = 0;
+        ((Vertex) grid[s.x][s.y]).f = ((Vertex) grid[s.x][s.y]).g + hScore(((Vertex) grid[s.x][s.y]).pos, e);
 
         while (!openSet.isEmpty()) {
 
@@ -24,7 +24,7 @@ public class AStar {
                 return new ArrayList<>();
             }
 
-            final List<Vertex> neighbors = getNeighbors(grid, current);
+            final List<Vertex> neighbors = getNeighbors((Vertex[][]) grid, current);
 
             for (Vertex neighbor : neighbors) {
 

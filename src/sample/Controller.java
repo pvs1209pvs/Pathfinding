@@ -1,11 +1,13 @@
 package sample;
 
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.effect.Glow;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -15,6 +17,7 @@ import javafx.scene.text.Font;
 
 import java.awt.*;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,6 +30,7 @@ public class Controller {
     public Button quit;
     public Button clear;
     public Button details;
+    public ComboBox<FXCollections> algoSelect;
 
     private GraphicsContext graphicsContext2D;
     private String keyPress;
@@ -234,37 +238,72 @@ public class Controller {
         return true;
     }
 
-    @FXML
-    public void startAStar(ActionEvent actionEvent) {
+
+    public void cool(ActionEvent actionEvent) {
+        System.out.println(algoSelect.getValue());
+
+        String algo = algoSelect.getValue().toString();
+
 
         if (!hasStartFinish()) {
             return;
         }
 
-        AStar.Vertex[][] grid = new AStar.Vertex[gridSize][gridSize];
-        for (int i = 0; i < gridSize; i++) {
-            for (int j = 0; j < gridSize; j++) {
-                grid[i][j] = new AStar.Vertex(new Point(i, j));
+        GridVertex[][] grid = new GridVertex[gridSize][gridSize];
+
+        switch (algo){
+            case "A-Star" -> {
+                grid = new AStar.Vertex[gridSize][gridSize];
+                for (int i = 0; i < gridSize; i++) {
+                    for (int j = 0; j < gridSize; j++) {
+                        grid[i][j] = new AStar.Vertex(new Point(i, j));
+                    }
+                }
+            }
+            case "Dijkstra" -> {
+                grid = new Dijkstra.Vertex[gridSize][gridSize];
+                for (int i = 0; i < gridSize; i++) {
+                    for (int j = 0; j < gridSize; j++) {
+                        grid[i][j] = new Dijkstra.Vertex(new Point(i, j));
+                    }
+                }
             }
         }
 
-        walls.forEach(w -> grid[w.x][w.y].setType(VertexType.WALL));
-        grid[start.getPosition().x][start.getPosition().y].setType(VertexType.PATH);
-        grid[end.getPosition().x][end.getPosition().y].setType(VertexType.PATH);
+        addWallToGrid(grid);
 
-        List<Point> path = AStar.shortestPath(grid, start.getPosition(), end.getPosition());
-        path.remove(end.getPosition());
-        path.remove(start.getPosition());
+        List<Point> path = new ArrayList<>();
 
+        if (algo.equals("A-Star")) {
+            path = AStar.shortestPath(grid, start.getPosition(), end.getPosition());
+        } else if (algo.equals("Dijkstra")) {
+            path = Dijkstra.shortestPath(grid, start.getPosition(), end.getPosition());
+        }
+
+        removeMarkersFromPath(path);
 
         pathValidityMsg(path);
 
-        details.setOnMouseClicked(eve -> writeAStarScore(grid));
+        GridVertex[][] finalGrid = grid;
+        details.setOnMouseClicked(eve -> writeGridScore(finalGrid));
+
 
     }
 
 
-    private void writeAStarScore(GridVertex[][] grid) {
+    private void addWallToGrid(GridVertex[][] grid) {
+        walls.forEach(w -> grid[w.x][w.y].setType(VertexType.WALL));
+        grid[start.getPosition().x][start.getPosition().y].setType(VertexType.PATH);
+        grid[end.getPosition().x][end.getPosition().y].setType(VertexType.PATH);
+    }
+
+    private void removeMarkersFromPath(List<Point> path) {
+        path.remove(end.getPosition());
+        path.remove(start.getPosition());
+    }
+
+
+    private void writeGridScore(GridVertex[][] grid) {
 
         graphicsContext2D.setFont(new Font("Arial", 10));
         graphicsContext2D.setFill(Color.BLACK);
@@ -280,39 +319,6 @@ public class Controller {
         }
     }
 
-
-    /**
-     * Stats the pathfinding animation.
-     *
-     * @param actionEvent Action event.
-     */
-    @FXML
-    private void startDij(ActionEvent actionEvent) {
-
-        if (!hasStartFinish()) {
-            return;
-        }
-
-        Dijkstra.Vertex[][] grid = new Dijkstra.Vertex[gridSize][gridSize];
-        for (int i = 0; i < gridSize; i++) {
-            for (int j = 0; j < gridSize; j++) {
-                grid[i][j] = new Dijkstra.Vertex(new Point(i, j));
-            }
-        }
-
-        walls.forEach(w -> grid[w.x][w.y].setType(VertexType.WALL));
-        grid[start.getPosition().x][start.getPosition().y].setType(VertexType.PATH);
-        grid[end.getPosition().x][end.getPosition().y].setType(VertexType.PATH);
-
-        List<Point> path = Dijkstra.shortestPath(grid, start.getPosition(), end.getPosition());
-        path.remove(end.getPosition());
-        path.remove(start.getPosition());
-
-        pathValidityMsg(path);
-        details.setOnMouseClicked(eve -> writeAStarScore(grid));
-
-
-    }
 
     private void pathValidityMsg(List<Point> path) {
 
@@ -439,8 +445,4 @@ public class Controller {
         }
     }
 
-
-//    public void showDetails(ActionEvent actionEvent) {
-//        writeScore();
-//    }
 }
