@@ -14,18 +14,18 @@ public class Dijkstra {
      * @param e Ending point.
      * @return Shortest path.
      */
-    public static List<Point> shortestPath(GridVertex[][] grid, Point s, Point e) {
+    public static List<Point> shortestPath(Vertex[][] grid, Point s, Point e) {
 
         final Queue<Vertex> q = new ArrayDeque<>();
         final Map<Point, Point> prev = new HashMap<>();
 
-        ((Vertex) grid[s.x][s.y]).dist = 0;
-        q.add((Vertex) grid[s.x][s.y]);
+        grid[s.x][s.y].dist = 0;
+        q.add(grid[s.x][s.y]);
 
         while (!q.isEmpty()) {
 
             final Vertex u = q.remove();
-            final List<Vertex> neighbors = getNeighbors((Vertex[][]) grid, u);
+            final List<Vertex> neighbors = getNeighbors(grid, u);
 
             for (Vertex v : neighbors) {
 
@@ -42,8 +42,11 @@ public class Dijkstra {
 
         }
 
-        return cameFrom(prev, ((Vertex) grid[e.x][e.y]).pos);
 
+        List<Point> shortestPath = cameFrom(prev, grid[e.x][e.y].pos);
+        shortestPath.remove(s);
+        shortestPath.remove(e);
+        return shortestPath;
     }
 
     /**
@@ -76,10 +79,14 @@ public class Dijkstra {
 
         final List<Vertex> neighbors = new ArrayList<>();
         final List<Point> explorationDir = List.of(
+                new Point(-1, -1),
+                new Point(0, -1),
+                new Point(1, -1),
                 new Point(-1, 0),
                 new Point(1, 0),
-                new Point(0, -1),
-                new Point(0, 1));
+                new Point(-1, 1),
+                new Point(0, 1),
+                new Point(1, 1));
 
 
         for (Point dir : explorationDir) {

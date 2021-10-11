@@ -6,15 +6,15 @@ import java.util.List;
 
 public class AStar {
 
-    public static List<Point> shortestPath(GridVertex[][] grid, Point s, Point e) {
+    public static List<Point> shortestPath(Vertex[][] grid, Point s, Point e) {
 
         final PriorityQueue<Vertex> openSet = new PriorityQueue<>();
-        final Map<Point, Point> cameFrom = new HashMap<>();
+        final Map<Point, Point> prev = new HashMap<>();
 
-        openSet.add((Vertex) grid[s.x][s.y]);
+        openSet.add(grid[s.x][s.y]);
 
-        ((Vertex) grid[s.x][s.y]).g = 0;
-        ((Vertex) grid[s.x][s.y]).f = ((Vertex) grid[s.x][s.y]).g + hScore(((Vertex) grid[s.x][s.y]).pos, e);
+        grid[s.x][s.y].g = 0;
+        grid[s.x][s.y].f = grid[s.x][s.y].g + hScore(grid[s.x][s.y].pos, e);
 
         while (!openSet.isEmpty()) {
 
@@ -24,14 +24,14 @@ public class AStar {
                 return new ArrayList<>();
             }
 
-            final List<Vertex> neighbors = getNeighbors((Vertex[][]) grid, current);
+            final List<Vertex> neighbors = getNeighbors(grid, current);
 
             for (Vertex neighbor : neighbors) {
 
                 final double t = current.g + 1;
 
                 if (t < neighbor.g) {
-                    cameFrom.put(neighbor.pos, current.pos);
+                    prev.put(neighbor.pos, current.pos);
                     neighbor.g = t;
                     neighbor.f = neighbor.g + hScore(neighbor.pos, e);
 
@@ -44,7 +44,10 @@ public class AStar {
 
         }
 
-        return cameFrom(cameFrom, e);
+        List<Point> shortestPath = cameFrom(prev, e);
+        shortestPath.remove(s);
+        shortestPath.remove(e);
+        return shortestPath;
     }
 
     private static List<Point> cameFrom(Map<Point, Point> prev, Point end) {
@@ -64,10 +67,14 @@ public class AStar {
 
         final List<Vertex> neighbors = new ArrayList<>();
         final List<Point> explorationDir = List.of(
+                new Point(-1, -1),
+                new Point(0, -1),
+                new Point(1, -1),
                 new Point(-1, 0),
                 new Point(1, 0),
-                new Point(0, -1),
-                new Point(0, 1));
+                new Point(-1, 1),
+                new Point(0, 1),
+                new Point(1, 1));
 
 
         for (Point dir : explorationDir) {

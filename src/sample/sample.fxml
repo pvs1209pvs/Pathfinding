@@ -9,40 +9,33 @@
 <?import javafx.geometry.Insets?>
 
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.collections.FXCollections?>
-<?import java.lang.String?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TextArea?>
 <HBox fx:id="mainHBox" fx:controller="sample.Controller" xmlns:fx="http://javafx.com/fxml" alignment="center">
 
-    <VBox prefWidth="130" alignment="CENTER" spacing="10">
-        <padding>
-            <Insets topRightBottomLeft="10"/>
-        </padding>
+    <VBox prefWidth="150" alignment="CENTER" spacing="10">
 
-        <ComboBox fx:id="algoSelect" onAction="#cool">
-            <items>
-                <FXCollections fx:factory="observableArrayList">
-                    <String fx:value="A-Star"/>
-                    <String fx:value="Dijkstra"/>
-
-                </FXCollections>
-            </items>
-            <value>
-                <String fx:value="A-Star"/>
-            </value>
-        </ComboBox>
-
-<!--        <Button text="AStar" prefWidth="80" onAction="#startAStar"/>-->
-<!--        <Button text="Dijkstra" prefWidth="80" onAction="#startDij"/>-->
+        <Button text="AStar" prefWidth="80" onAction="#startAStar"/>
+        <Button text="Dijkstra" prefWidth="80" onAction="#startDij"/>
+        <Button fx:id="details" text="Scoring" prefWidth="80"/>
         <Button text="Random" prefWidth="80" onAction="#genRandom"/>
-        <Button fx:id="details" text="Show Score" prefWidth="80" />
-        <Button fx:id="clear" text="Clear" prefWidth="80" onAction="#clearButton"/>
-        <Button fx:id="quit" text="Quit" prefWidth="80" onAction="#quitButton"/>
 
+        <Text fx:id="gridLen" text="Grid Size"/>
         <HBox spacing="5" alignment="CENTER">
             <Button text="+" prefWidth="80" onAction="#incrGridSize"/>
             <Button text="-" prefWidth="80" onAction="#decrGridSize"/>
         </HBox>
+
+        <Text fx:id="wallDensity" text="Wall Density"/>
+        <HBox spacing="5" alignment="CENTER">
+            <Button text="+" prefWidth="80" onMouseClicked="#incrDensity"/>
+            <Button text="-" prefWidth="80" onMouseClicked="#decrDensity"/>
+        </HBox>
+
+        <Button fx:id="clear" text="Clear" prefWidth="80" onAction="#clearButton"/>
+        <Button fx:id="quit" text="Quit" prefWidth="80" onAction="#quitButton"/>
+
+        <TextArea fx:id="summary" prefWidth="80" prefHeight="40" wrapText="true"/>
 
         <Label text="How To" maxWidth="80"/>
         <TextFlow>
@@ -57,7 +50,7 @@
     </VBox>
 
     <Canvas fx:id="mainCanvas"
-            onMouseDragged="#addWall"
+            onMouseDragged="#drawWall"
             onMouseClicked="#addStartFinish"
             onKeyPressed="#option">
     </Canvas>
