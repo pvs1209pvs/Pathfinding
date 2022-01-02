@@ -1,4 +1,4 @@
-package sample;
+package animation;
 
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.GraphicsContext;
@@ -8,7 +8,8 @@ import java.awt.*;
 import java.util.Iterator;
 import java.util.List;
 
-import static sample.Controller.len;
+import static fx.Controller.len;
+
 
 public class ShortestPathAnimation extends AnimationTimer {
 
@@ -16,7 +17,7 @@ public class ShortestPathAnimation extends AnimationTimer {
     private final Iterator<Point> shortestPathIterator;
     private long prevTime = 0;
 
-    ShortestPathAnimation(List<Point> shortestPath, GraphicsContext graphicsContext) {
+    public ShortestPathAnimation(List<Point> shortestPath, GraphicsContext graphicsContext) {
         this.graphicsContext = graphicsContext;
         this.shortestPathIterator = shortestPath.iterator();
     }
@@ -27,7 +28,7 @@ public class ShortestPathAnimation extends AnimationTimer {
         if (l - prevTime > 15e6) {
             prevTime = l;
 
-            if(shortestPathIterator.hasNext()){
+            if (shortestPathIterator.hasNext()) {
                 Point v = shortestPathIterator.next();
                 graphicsContext.setFill(Color.rgb(78, 165, 210));
                 graphicsContext.setStroke(Color.GRAY);

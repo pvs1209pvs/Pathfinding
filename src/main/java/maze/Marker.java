@@ -1,4 +1,4 @@
-package sample;
+package maze;
 
 import javafx.scene.paint.Color;
 
@@ -16,7 +16,7 @@ public class Marker {
         this.color = colors;
     }
 
-    void unSet(){
+    public void unSet(){
         this.position = new Point(-1, -1);
         this.isSet = false;
     }
@@ -44,7 +44,7 @@ public class Marker {
 
     @Override
     public String toString() {
-        return "Marker{" +
+        return "maze.Marker{" +
                 "position=" + position +
                 ", isSet=" + isSet +
                 ", color=" + color +

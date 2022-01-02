@@ -1,4 +1,4 @@
-package sample;
+package algorithm;
 
 public interface GridVertex {
 

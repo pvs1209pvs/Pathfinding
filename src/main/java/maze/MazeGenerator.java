@@ -1,14 +1,12 @@
-package sample;
+package maze;
 
 import java.awt.*;
-import java.util.*;
 import java.util.List;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 public class MazeGenerator {
 
-    static List<Point> genRandomWalls(int gridSize, double density) {
+    public static List<Point> genRandomWalls(int gridSize, double density) {
 
         return IntStream.range(0, (int) (gridSize * gridSize * density))
                 .mapToObj(p -> new Point((int) (Math.random() * gridSize), (int) (Math.random() * gridSize)))
@@ -16,7 +14,7 @@ public class MazeGenerator {
 
     }
 
-    static Point[] genMarkers(int gridSize) {
+    public static Point[] genMarkers(int gridSize) {
 
     Point[] markers = new Point[2];
 

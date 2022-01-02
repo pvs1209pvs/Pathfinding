@@ -1,4 +1,4 @@
-package sample;
+package algorithm;
 
 import java.awt.*;
 import java.util.List;
@@ -101,14 +101,14 @@ public class Dijkstra {
 
     }
 
-    static class Vertex implements GridVertex {
+    public static class Vertex implements GridVertex {
 
         private final Point pos;
         private VertexType type;
         private int dist;
         private boolean visited;
 
-        Vertex(Point pos) {
+        public Vertex(Point pos) {
             this.pos = pos;
             this.dist = Integer.MAX_VALUE;
             this.visited = false;

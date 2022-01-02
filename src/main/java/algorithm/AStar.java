@@ -1,4 +1,4 @@
-package sample;
+package algorithm;
 
 import java.awt.*;
 import java.util.*;
@@ -95,14 +95,14 @@ public class AStar {
         return current.distance(e);
     }
 
-    static class Vertex implements Comparable<Vertex>, GridVertex {
+    public static class Vertex implements Comparable<Vertex>, GridVertex {
 
         private final Point pos;
         private VertexType type;
         private double g;
         private double f;
 
-        Vertex(Point pos) {
+        public Vertex(Point pos) {
             this.pos = pos;
             this.g = Integer.MAX_VALUE;
             this.f = Integer.MAX_VALUE;

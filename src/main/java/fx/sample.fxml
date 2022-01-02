@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TextArea?>
-<HBox fx:id="mainHBox" fx:controller="sample.Controller" xmlns:fx="http://javafx.com/fxml" alignment="center">
+<HBox fx:id="mainHBox" fx:controller="fx.Controller" xmlns:fx="http://javafx.com/fxml" alignment="center">
 
     <VBox prefWidth="150" alignment="CENTER" spacing="10">
 

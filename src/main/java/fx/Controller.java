@@ -1,5 +1,7 @@
-package sample;
+package fx;
 
+import algorithm.*;
+import animation.ShortestPathAnimation;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
@@ -13,6 +15,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import maze.Marker;
+import maze.MazeGenerator;
 
 import java.awt.*;
 import java.text.DecimalFormat;
@@ -30,7 +34,7 @@ public class Controller {
     private GraphicsContext graphicsContext2D;
     private String keyPress;
 
-    static final int CANVAS_SIZE = 800;
+    public static final int CANVAS_SIZE = 800;
     private static int gridSize = 100;
     public static int len = CANVAS_SIZE / gridSize;
 
@@ -52,7 +56,7 @@ public class Controller {
         mainCanvas.setWidth(CANVAS_SIZE);
         mainCanvas.addEventFilter(MouseEvent.ANY, e -> mainCanvas.requestFocus());
         graphicsContext2D = mainCanvas.getGraphicsContext2D();
-        wallDensity.setText("Wall Density " + density/10.0);
+        wallDensity.setText("Wall Density " + density / 10.0);
         gridLen.setText("Grid Size " + gridSize);
         resetCanvas();
 
@@ -226,7 +230,7 @@ public class Controller {
         return true;
     }
 
-    private void resetSameGrid(Algorithm lastAlgoRan){
+    private void resetSameGrid(Algorithm lastAlgoRan) {
         if (pathFound) {
             if (this.lastAlgoRan.equals(lastAlgoRan)) {
                 redrawCanvas();
@@ -364,7 +368,7 @@ public class Controller {
      * Adds random walls on the grid.
      */
     private void genRandomWalls() {
-        MazeGenerator.genRandomWalls(gridSize, density/10.0
+        MazeGenerator.genRandomWalls(gridSize, density / 10.0
         ).forEach(this::drawWall);
     }
 
@@ -464,16 +468,16 @@ public class Controller {
     }
 
     public void incrDensity(MouseEvent mouseEvent) {
-        if(density < 10){
+        if (density < 10) {
             density += 1;
-            wallDensity.setText("Wall Density " + density/10.0);
+            wallDensity.setText("Wall Density " + density / 10.0);
         }
     }
 
     public void decrDensity(MouseEvent mouseEvent) {
-        if(density > 0){
+        if (density > 0) {
             density -= 1;
-            wallDensity.setText("Wall Density " + density/10.0);
+            wallDensity.setText("Wall Density " + density / 10.0);
 
         }
     }

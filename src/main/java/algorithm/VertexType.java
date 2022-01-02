@@ -1,4 +1,4 @@
-package sample;
+package algorithm;
 
 public enum VertexType {
 
