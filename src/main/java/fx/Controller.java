@@ -335,7 +335,7 @@ public class Controller {
     private void showSnackbar(String msg) {
         Platform.runLater(() -> {
             JFXSnackbar snackbar = new JFXSnackbar(mainHBox);
-            String css = getClass().getClassLoader().getResource("fx/style.css").toExternalForm();
+            String css = Objects.requireNonNull(getClass().getClassLoader().getResource("fx/style.css")).toExternalForm();
             snackbar.setTranslateX(50);
             snackbar.setPrefWidth(CANVAS_SIZE);
             snackbar.getStylesheets().add(css);
