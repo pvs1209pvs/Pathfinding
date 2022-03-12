@@ -11,12 +11,11 @@ import java.util.stream.IntStream;
 
 public class MazeGenerator {
 
-
     public static List<Point> generateMaze(int gridSize) {
 
         try {
             new ProcessBuilder("sh", "-c", "g++ -o src/main/c++/rbt.out src/main/c++/recursive_bracktracker.cpp").start().waitFor();
-            new ProcessBuilder("sh", "-c", "src/main/c++/rbt.out -w " + gridSize + " -h " + gridSize + " > src/main/java/maze/ascii_maze.txt").start().waitFor();
+            new ProcessBuilder("sh", "-c", "src/main/c++/rbt.out -w " + (gridSize) + " -h " + (gridSize) + " > src/main/java/maze/ascii_maze.txt").start().waitFor();
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }

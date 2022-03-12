@@ -1,5 +1,13 @@
+.jfx-snackbar-content{
+    -fx-background-color: #44c2d0;
+}
+
+.jfx-snackbar-toast{
+    -fx-text-fill: #ffffff;
+}
+
 .button {
-    -fx-background-color: #44d0cd;
+    -fx-background-color: #44c2d0;
     -fx-text-fill: #ffffff
 }
 

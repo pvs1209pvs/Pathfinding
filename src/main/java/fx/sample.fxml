@@ -27,8 +27,6 @@
         <Button fx:id="clear" text="Clear" prefWidth="80" onAction="#clearButton"/>
         <Button fx:id="quit" text="Quit" prefWidth="80" onAction="#quitButton"/>
 
-        <TextArea fx:id="summary" prefWidth="80" prefHeight="40" wrapText="true"/>
-
         <Label text="How To" maxWidth="80"/>
         <TextFlow>
             <Text text="Drag mouse to add "/>

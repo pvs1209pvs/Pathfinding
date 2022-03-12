@@ -2,19 +2,22 @@ package fx;
 
 import algorithm.*;
 import animation.ShortestPathAnimation;
+import com.jfoenix.controls.JFXSnackbar;
+import com.jfoenix.controls.JFXSnackbarLayout;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
 import javafx.scene.effect.Glow;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 import maze.Marker;
 import maze.MazeGenerator;
 
@@ -23,11 +26,12 @@ import java.text.DecimalFormat;
 import java.util.*;
 import java.util.List;
 
+
 public class Controller {
 
     public Button details;
-    public TextArea summary;
     public Text gridLen;
+    public HBox mainHBox;
 
     private GraphicsContext graphicsContext2D;
     private String keyPress;
@@ -194,10 +198,10 @@ public class Controller {
     private void addStartFinish(MouseEvent mouseEvent) {
 
         switch (keyPress) {
-            case "s":{
+            case "s": {
                 drawMarker(start, mousePosOnCanvas(mouseEvent));
             }
-            case "e" :{
+            case "e": {
                 drawMarker(end, mousePosOnCanvas(mouseEvent));
             }
         }
@@ -206,24 +210,14 @@ public class Controller {
 
     }
 
-    private void writeSummary(int shortestPathLength) {
-        summary.setText(lastAlgoRan + " = " + algoTimeTaken + " ms");
-    }
-
     private boolean hasStartFinish() {
 
-        Alert missingStartFinishAlert = new Alert(Alert.AlertType.ERROR);
-        missingStartFinishAlert.setHeaderText(null);
-        missingStartFinishAlert.setGraphic(null);
-
         if (!start.isSet()) {
-            missingStartFinishAlert.setContentText("Starting point not set.");
-            missingStartFinishAlert.showAndWait();
+            showSnackbar("Starting point not set.");
             return false;
         }
         if (!end.isSet()) {
-            missingStartFinishAlert.setContentText("Ending point not set.");
-            missingStartFinishAlert.showAndWait();
+            showSnackbar("Ending point not set.");
             return false;
         }
 
@@ -242,14 +236,14 @@ public class Controller {
                 drawMarker(end, end.getPosition());
                 pathFound = false;
             } else {
-                showPathInvalidMAlert();
+
+                showSnackbar("Path already found.");
             }
         }
     }
 
     @FXML
     public void startAStar(ActionEvent actionEvent) {
-
 
         if (!hasStartFinish()) {
             return;
@@ -268,7 +262,7 @@ public class Controller {
 
         final long startTime = System.currentTimeMillis();
         List<Point> path = AStar.shortestPath(grid, start.getPosition(), end.getPosition());
-        algoTimeTaken = System.currentTimeMillis()-startTime;
+        algoTimeTaken = System.currentTimeMillis() - startTime;
 
         lastAlgoRan = Algorithm.ASTAR;
         playPathAnim(grid, path);
@@ -302,7 +296,7 @@ public class Controller {
 
         final long startTime = System.currentTimeMillis();
         List<Point> path = Dijkstra.shortestPath(grid, start.getPosition(), end.getPosition());
-        algoTimeTaken = System.currentTimeMillis()-startTime;
+        algoTimeTaken = System.currentTimeMillis() - startTime;
 
         lastAlgoRan = Algorithm.DIJKSTRA;
         playPathAnim(grid, path);
@@ -320,7 +314,7 @@ public class Controller {
     private void writeAStarScore(GridVertex[][] grid) {
 
         if (gridSize > 25) {
-            System.out.println("Grid size cannot exceed 25 units for show details");
+            showSnackbar("Grid size cannot exceed 25 units for show details");
             return;
         }
 
@@ -338,23 +332,25 @@ public class Controller {
         }
     }
 
-    private void showPathInvalidMAlert() {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setHeaderText(null);
-        alert.setGraphic(null);
-        alert.setContentText(pathFound ? "Path already found." : "No path exists.");
-        alert.showAndWait();
+    private void showSnackbar(String msg) {
+        Platform.runLater(() -> {
+            JFXSnackbar snackbar = new JFXSnackbar(mainHBox);
+            String css = getClass().getClassLoader().getResource("fx/style.css").toExternalForm();
+            snackbar.setTranslateX(50);
+            snackbar.setPrefWidth(CANVAS_SIZE);
+            snackbar.getStylesheets().add(css);
+            snackbar.fireEvent(new JFXSnackbar.SnackbarEvent(new JFXSnackbarLayout(msg), Duration.seconds(3), null));
+        });
     }
 
     private void playPathAnim(GridVertex[][] grid, List<Point> path) {
 
         if (path.isEmpty()) {
-            showPathInvalidMAlert();
+            showSnackbar(pathFound ? "Path already found." : "No path exists.");
         } else {
             if (!pathFound) {
                 new ShortestPathAnimation(path, mainCanvas.getGraphicsContext2D()).start();
                 pathFound = true;
-                writeSummary(path.size());
             }
         }
 
@@ -400,8 +396,6 @@ public class Controller {
     }
 
 
-
-
     /**
      * Decreases the size of the grid by 5 units.
      *
@@ -416,12 +410,7 @@ public class Controller {
 
             resetCanvas();
         } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText(null);
-            alert.setGraphic(null);
-            alert.setContentText("Grid size cannot recede 5 units ");
-            alert.showAndWait();
-
+            showSnackbar("Grid size cannot recede 5 units ");
         }
     }
 
@@ -435,14 +424,9 @@ public class Controller {
             gridSize += 5;
             len = CANVAS_SIZE / gridSize;
             gridLen.setText("Grid Size " + gridSize);
-
             resetCanvas();
         } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText(null);
-            alert.setGraphic(null);
-            alert.setContentText("Grid size cannot exceed " + gridSize + "  units ");
-            alert.showAndWait();
+            showSnackbar("Grid size cannot exceed " + gridSize + "  units ");
         }
     }
 
@@ -472,7 +456,6 @@ public class Controller {
     private void quitButton() {
         System.exit(0);
     }
-
 
 
 }
