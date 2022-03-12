@@ -78,15 +78,13 @@ public class Dijkstra {
     private static List<Vertex> getNeighbors(Vertex[][] grid, Vertex current) {
 
         final List<Vertex> neighbors = new ArrayList<>();
-        final List<Point> explorationDir = List.of(
-                new Point(-1, -1),
-                new Point(0, -1),
-                new Point(1, -1),
-                new Point(-1, 0),
-                new Point(1, 0),
-                new Point(-1, 1),
-                new Point(0, 1),
-                new Point(1, 1));
+        final List<Point> explorationDir = new ArrayList<>();
+
+               explorationDir.add(new Point(0, -1));
+               explorationDir.add(new Point(-1, 0));
+               explorationDir.add(new Point(1, 0));
+               explorationDir.add(new Point(0, 1));
+
 
 
         for (Point dir : explorationDir) {
@@ -103,10 +101,10 @@ public class Dijkstra {
 
     public static class Vertex implements GridVertex {
 
-        private final Point pos;
+        public final Point pos;
         private VertexType type;
         private int dist;
-        private boolean visited;
+        public boolean visited;
 
         public Vertex(Point pos) {
             this.pos = pos;

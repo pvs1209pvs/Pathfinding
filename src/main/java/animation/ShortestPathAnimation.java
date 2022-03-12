@@ -2,6 +2,8 @@ package animation;
 
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.effect.Effect;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.paint.Color;
 
 import java.awt.*;

@@ -6,10 +6,7 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 
-<?import javafx.geometry.Insets?>
 
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TextArea?>
 <HBox fx:id="mainHBox" fx:controller="fx.Controller" xmlns:fx="http://javafx.com/fxml" alignment="center">
 
@@ -22,15 +19,10 @@
 
         <Text fx:id="gridLen" text="Grid Size"/>
         <HBox spacing="5" alignment="CENTER">
-            <Button text="+" prefWidth="80" onAction="#incrGridSize"/>
-            <Button text="-" prefWidth="80" onAction="#decrGridSize"/>
+            <Button text="+" maxWidth="60" onAction="#incrGridSize"/>
+            <Button text="-" maxWidth="60" onAction="#decrGridSize"/>
         </HBox>
 
-        <Text fx:id="wallDensity" text="Wall Density"/>
-        <HBox spacing="5" alignment="CENTER">
-            <Button text="+" prefWidth="80" onMouseClicked="#incrDensity"/>
-            <Button text="-" prefWidth="80" onMouseClicked="#decrDensity"/>
-        </HBox>
 
         <Button fx:id="clear" text="Clear" prefWidth="80" onAction="#clearButton"/>
         <Button fx:id="quit" text="Quit" prefWidth="80" onAction="#quitButton"/>

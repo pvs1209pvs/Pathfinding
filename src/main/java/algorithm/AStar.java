@@ -43,7 +43,6 @@ public class AStar {
             }
 
         }
-
         List<Point> shortestPath = cameFrom(prev, e);
         shortestPath.remove(s);
         shortestPath.remove(e);
@@ -66,16 +65,12 @@ public class AStar {
     private static List<Vertex> getNeighbors(Vertex[][] grid, Vertex current) {
 
         final List<Vertex> neighbors = new ArrayList<>();
-        final List<Point> explorationDir = List.of(
-                new Point(-1, -1),
-                new Point(0, -1),
-                new Point(1, -1),
-                new Point(-1, 0),
-                new Point(1, 0),
-                new Point(-1, 1),
-                new Point(0, 1),
-                new Point(1, 1));
+        final List<Point> explorationDir = new ArrayList<>();
 
+        explorationDir.add(new Point(0, -1));
+        explorationDir.add(new Point(-1, 0));
+        explorationDir.add(new Point(1, 0));
+        explorationDir.add(new Point(0, 1));
 
         for (Point dir : explorationDir) {
             int newX = current.pos.x + dir.x;
@@ -125,9 +120,12 @@ public class AStar {
             this.type = type;
         }
 
-        @Override
+//        @Override
+//        public String toString() {
+//            return "(" + pos.x + "," + pos.y + " f:" + f + " g:" + g + ")";
+//        }
         public String toString() {
-            return "(" + pos.x + "," + pos.y + " f:" + f + " g:" + g + ")";
+            return "(" + pos.x + "," + pos.y + ")";
         }
 
         @Override

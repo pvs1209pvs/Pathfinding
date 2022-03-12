@@ -20,15 +20,13 @@ import maze.MazeGenerator;
 
 import java.awt.*;
 import java.text.DecimalFormat;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.List;
 
 public class Controller {
 
-
     public Button details;
     public TextArea summary;
-    public Text wallDensity;
     public Text gridLen;
 
     private GraphicsContext graphicsContext2D;
@@ -38,14 +36,14 @@ public class Controller {
     private static int gridSize = 100;
     public static int len = CANVAS_SIZE / gridSize;
 
-    private int density = 5;
-
     private final Marker start = new Marker(Color.rgb(96, 165, 97));
     private final Marker end = new Marker(Color.rgb(227, 74, 111));
 
     private final List<Point> walls = new LinkedList<>();
     private boolean pathFound;
     private Algorithm lastAlgoRan;
+
+    private long algoTimeTaken = Integer.MAX_VALUE;
 
     @FXML
     private Canvas mainCanvas;
@@ -56,7 +54,6 @@ public class Controller {
         mainCanvas.setWidth(CANVAS_SIZE);
         mainCanvas.addEventFilter(MouseEvent.ANY, e -> mainCanvas.requestFocus());
         graphicsContext2D = mainCanvas.getGraphicsContext2D();
-        wallDensity.setText("Wall Density " + density / 10.0);
         gridLen.setText("Grid Size " + gridSize);
         resetCanvas();
 
@@ -197,8 +194,12 @@ public class Controller {
     private void addStartFinish(MouseEvent mouseEvent) {
 
         switch (keyPress) {
-            case "s" -> drawMarker(start, mousePosOnCanvas(mouseEvent));
-            case "e" -> drawMarker(end, mousePosOnCanvas(mouseEvent));
+            case "s":{
+                drawMarker(start, mousePosOnCanvas(mouseEvent));
+            }
+            case "e" :{
+                drawMarker(end, mousePosOnCanvas(mouseEvent));
+            }
         }
 
         keyPress = "";
@@ -206,7 +207,7 @@ public class Controller {
     }
 
     private void writeSummary(int shortestPathLength) {
-        summary.setText(lastAlgoRan + " = " + shortestPathLength);
+        summary.setText(lastAlgoRan + " = " + algoTimeTaken + " ms");
     }
 
     private boolean hasStartFinish() {
@@ -249,12 +250,12 @@ public class Controller {
     @FXML
     public void startAStar(ActionEvent actionEvent) {
 
+
         if (!hasStartFinish()) {
             return;
         }
 
         resetSameGrid(Algorithm.DIJKSTRA);
-
 
         AStar.Vertex[][] grid = new AStar.Vertex[gridSize][gridSize];
         for (int i = 0; i < gridSize; i++) {
@@ -265,11 +266,12 @@ public class Controller {
 
         addWallsToGrid(grid);
 
+        final long startTime = System.currentTimeMillis();
         List<Point> path = AStar.shortestPath(grid, start.getPosition(), end.getPosition());
+        algoTimeTaken = System.currentTimeMillis()-startTime;
 
         lastAlgoRan = Algorithm.ASTAR;
         playPathAnim(grid, path);
-
 
     }
 
@@ -281,6 +283,7 @@ public class Controller {
      */
     @FXML
     private void startDij(ActionEvent actionEvent) {
+
 
         if (!hasStartFinish()) {
             return;
@@ -297,8 +300,9 @@ public class Controller {
 
         addWallsToGrid(grid);
 
+        final long startTime = System.currentTimeMillis();
         List<Point> path = Dijkstra.shortestPath(grid, start.getPosition(), end.getPosition());
-
+        algoTimeTaken = System.currentTimeMillis()-startTime;
 
         lastAlgoRan = Algorithm.DIJKSTRA;
         playPathAnim(grid, path);
@@ -368,8 +372,7 @@ public class Controller {
      * Adds random walls on the grid.
      */
     private void genRandomWalls() {
-        MazeGenerator.genRandomWalls(gridSize, density / 10.0
-        ).forEach(this::drawWall);
+        MazeGenerator.generateMaze(gridSize).forEach(this::drawWall);
     }
 
     /**
@@ -395,6 +398,9 @@ public class Controller {
         genRandomWalls();
         genRandomStartEnd();
     }
+
+
+
 
     /**
      * Decreases the size of the grid by 5 units.
@@ -467,18 +473,6 @@ public class Controller {
         System.exit(0);
     }
 
-    public void incrDensity(MouseEvent mouseEvent) {
-        if (density < 10) {
-            density += 1;
-            wallDensity.setText("Wall Density " + density / 10.0);
-        }
-    }
 
-    public void decrDensity(MouseEvent mouseEvent) {
-        if (density > 0) {
-            density -= 1;
-            wallDensity.setText("Wall Density " + density / 10.0);
 
-        }
-    }
 }

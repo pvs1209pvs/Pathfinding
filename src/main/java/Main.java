@@ -6,7 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
-import java.util.Objects;
+import java.util.*;
 
 public class Main extends Application {
 
@@ -20,9 +20,12 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
 
+
+
         primaryStage.show();
 
     }
+
 
     public static void main(String[] args) {
         launch(args);
