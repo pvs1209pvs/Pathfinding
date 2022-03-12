@@ -47,7 +47,7 @@ public class Controller {
     private boolean pathFound;
     private Algorithm lastAlgoRan;
 
-    private long algoTimeTaken = Integer.MAX_VALUE;
+    private ShortestPathAnimation shortestPathAnim;
 
     @FXML
     private Canvas mainCanvas;
@@ -120,12 +120,10 @@ public class Controller {
      * @return Position of the mouse on canvas.
      */
     private Point mousePosOnCanvas(MouseEvent mouseEvent) {
-
         Point mousePos = new Point((int) (mouseEvent.getSceneX() - 100), (int) (mouseEvent.getSceneY() - 0));
         mousePos.x = ((mousePos.x + (len - (mousePos.x % len))) - len) / len;
         mousePos.y = ((mousePos.y + (len - (mousePos.y % len))) - len) / len;
         return mousePos;
-
     }
 
     /**
@@ -236,7 +234,6 @@ public class Controller {
                 drawMarker(end, end.getPosition());
                 pathFound = false;
             } else {
-
                 showSnackbar("Path already found.");
             }
         }
@@ -247,6 +244,10 @@ public class Controller {
 
         if (!hasStartFinish()) {
             return;
+        }
+
+        if(shortestPathAnim != null){
+            shortestPathAnim.stop();
         }
 
         resetSameGrid(Algorithm.DIJKSTRA);
@@ -260,9 +261,7 @@ public class Controller {
 
         addWallsToGrid(grid);
 
-        final long startTime = System.currentTimeMillis();
         List<Point> path = AStar.shortestPath(grid, start.getPosition(), end.getPosition());
-        algoTimeTaken = System.currentTimeMillis() - startTime;
 
         lastAlgoRan = Algorithm.ASTAR;
         playPathAnim(grid, path);
@@ -278,9 +277,12 @@ public class Controller {
     @FXML
     private void startDij(ActionEvent actionEvent) {
 
-
         if (!hasStartFinish()) {
             return;
+        }
+
+        if(shortestPathAnim != null){
+            shortestPathAnim.stop();
         }
 
         resetSameGrid(Algorithm.ASTAR);
@@ -294,9 +296,7 @@ public class Controller {
 
         addWallsToGrid(grid);
 
-        final long startTime = System.currentTimeMillis();
         List<Point> path = Dijkstra.shortestPath(grid, start.getPosition(), end.getPosition());
-        algoTimeTaken = System.currentTimeMillis() - startTime;
 
         lastAlgoRan = Algorithm.DIJKSTRA;
         playPathAnim(grid, path);
@@ -349,7 +349,8 @@ public class Controller {
             showSnackbar(pathFound ? "Path already found." : "No path exists.");
         } else {
             if (!pathFound) {
-                new ShortestPathAnimation(path, mainCanvas.getGraphicsContext2D()).start();
+                shortestPathAnim = new ShortestPathAnimation(path, mainCanvas.getGraphicsContext2D());
+                shortestPathAnim.start();
                 pathFound = true;
             }
         }
@@ -391,6 +392,9 @@ public class Controller {
     @FXML
     private void genRandom(ActionEvent actionEvent) {
         resetCanvas();
+        if(shortestPathAnim != null){
+            shortestPathAnim.stop();
+        }
         genRandomWalls();
         genRandomStartEnd();
     }
